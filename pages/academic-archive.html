@@ -83,8 +83,6 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   margin: 0 auto;
   padding: 72px 64px 64px;
 }
-
-/* =========== Intro =========== */
 .intro {
   max-width: 1160px;
   margin-bottom: 42px;
@@ -698,14 +696,19 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 /* =========== Legacy 2 × 2 Card grid (unused by HUD view) =========== */
 .cards {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 28px;
+  /* auto-fit ensures 3 columns when there's room (~1180px+)
+     and gracefully drops to 2 / 1 columns on narrower screens.
+     minmax(280px, 1fr) keeps each card readable — never below
+     280px regardless of viewport. */
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
   width: min(100%, 1360px);
+  margin: 0 auto;
 }
 .acard {
   position: relative;
   display: flex; flex-direction: column;
-  min-height: 600px;
+  min-height: 460px;
   border: 1px solid var(--border);
   border-radius: 18px;
   background: linear-gradient(160deg, rgba(17,24,39,0.94), rgba(5,8,16,0.98));
@@ -732,7 +735,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .acard__media {
   position: relative;
   flex: 1 1 auto;
-  min-height: 320px;
+  min-height: 240px;
   overflow: hidden;
   display: flex; align-items: stretch; justify-content: stretch;
   border-bottom: 1px solid var(--border);
@@ -1365,13 +1368,13 @@ body.has-media-detail {
   .page__return { right: 24px; }
   .intro__title { font-size: clamp(36px, 5vw, 52px); }
   .cards { gap: 22px; }
-  .acard { min-height: 560px; }
-  .acard__media { min-height: 280px; }
+  .acard { min-height: 480px; }
+  .acard__media { min-height: 240px; }
 }
 @media (max-width: 920px) {
-  .cards { grid-template-columns: 1fr; gap: 22px; max-width: 720px; margin: 0 auto; }
+  .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; max-width: 720px; margin: 0 auto; }
   .acard { min-height: 0; }
-  .acard__media { min-height: 360px; }
+  .acard__media { min-height: 200px; }
   .page__return { top: 18px; right: 18px; padding: 0 12px; font-size: 10px; letter-spacing: 0.12em; }
   .vertical-text, .side-rail { display: none; }
   .page-no { font-size: 140px; left: 18px; bottom: 50px; }
