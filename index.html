@@ -575,7 +575,7 @@
      Bridge mouse parallax from the host page into each iframe's
      document so the Hero's grid + scan layers react in step.
      ------------------------------------------------------------ */
-  function bridgeMouseParallax(doc) {
+  function bridgeMouseParallax(doc, frame, index) {
     if (!doc || !doc.documentElement) return;
     if (doc.documentElement.dataset.mouseBridged === "1") return;
     doc.documentElement.dataset.mouseBridged = "1";
@@ -585,9 +585,37 @@
       doc.documentElement.style.setProperty("--mx", mx.toFixed(3));
       doc.documentElement.style.setProperty("--my", my.toFixed(3));
     }, { passive: true });
+
+    /* Forward wheel events from inside the iframe to the host so
+       scrolling over an iframe advances the host's chapters.
+       Skipped for index 3 (projects) — the project carousel owns
+       the wheel there and tells the host about boundaries itself. */
+    if (index === 3) return;
+    var win = doc.defaultView;
+    var lastSentAt = 0;
+    var innerWheelBusy = false;
+    win.addEventListener("wheel", function (e) {
+      if (innerWheelBusy) return;
+      innerWheelBusy = true;
+      setTimeout(function () {
+        innerWheelBusy = false;
+        var scrollTop = win.scrollY || doc.documentElement.scrollTop || 0;
+        var scrollHeight = doc.documentElement.scrollHeight || 0;
+        var viewport = win.innerHeight || 0;
+        var atTop    = scrollTop <= 1;
+        var atBottom = scrollTop + viewport >= scrollHeight - 1;
+        var goingDown = e.deltaY > 0;
+        var canForward = (goingDown && atBottom) || (!goingDown && atTop);
+        if (!canForward) return;
+        var now = Date.now();
+        if (now - lastSentAt < 700) return;
+        lastSentAt = now;
+        window.postMessage({ type: "host-wheel", deltaY: e.deltaY }, "*");
+      }, 50);
+    }, { passive: true });
   }
 
-  function applyFitOverrides(doc, index) {
+  function applyFitOverrides(doc, index, frame) {
     if (!doc || !doc.head) return;
     if (doc.getElementById("protocol-fit-overrides")) return;
     /* overscroll-behavior: contain keeps inner pages from bouncing
@@ -607,13 +635,13 @@
       "body > main, body > .hero, body > .protocol-stage { min-height: 0 !important; height: auto !important; } " +
       ".nav, .protocol-nav { display: none !important; }";
     doc.head.appendChild(style);
-    bridgeMouseParallax(doc);
+    bridgeMouseParallax(doc, frame, index);
   }
 
   function bind(frame, index) {
     var timer = null;
     frame.addEventListener("load", function () {
-      applyFitOverrides(frame.contentDocument || frame.contentWindow.document, index);
+      applyFitOverrides(frame.contentDocument || frame.contentWindow.document, index, frame);
       requestAnimationFrame(function () { fit(frame); });
       if (timer) window.clearInterval(timer);
       timer = window.setInterval(function () { fit(frame); }, 400);
@@ -716,6 +744,42 @@
       currentSection = idx;
     }
   }
+
+  /* ------------------------------------------------------------
+     Wheel-driven chapter navigation
+     ------------------------------------------------------------
+     Iframes swallow wheel events at their boundary, so the host
+     page normally never sees them. We forward wheel events from
+     each iframe via postMessage — applyFitOverrides installs a
+     listener in every inner document that re-posts the deltaY to
+     the host, and the host's handler here turns each wheel into
+     a chapter transition.
+     ------------------------------------------------------------ */
+  var wheelBusy = false;
+  function hostWheel(e) {
+    // Graceful fallback to native scrolling when GSAP failed to
+    // load — the user can still scroll the host window normally.
+    if (!gsapReady) return;
+    if (wheelBusy) return;
+    if (Math.abs(e.deltaY) < 8) return;
+    wheelBusy = true;
+    var dir = e.deltaY > 0 ? 1 : -1;
+    var target = currentSection + dir;
+    if (target < 0) target = 0;
+    if (target >= frames.length) target = frames.length - 1;
+    if (target !== currentSection) jumpTo(target);
+    setTimeout(function () { wheelBusy = false; }, 850);
+  }
+
+  // Listen for forwarded wheel events from any iframe.
+  window.addEventListener("message", function (e) {
+    if (e.data && e.data.type === "host-wheel") {
+      hostWheel({ deltaY: e.data.deltaY });
+    }
+  });
+
+  // Also catch wheels over the host chrome (nav, body margins).
+  window.addEventListener("wheel", hostWheel, { passive: true });
 
   allNav.forEach(function (link) {
     link.addEventListener("click", function (e) {

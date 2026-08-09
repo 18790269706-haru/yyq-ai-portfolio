@@ -1789,8 +1789,13 @@ img[data-zoom] {
     var moved = goTo(currentIndex + dir);
 
     if (!moved) {
-      // At the boundary — let the wheel event propagate so the
-      // host page can scroll to the next/previous section.
+      // At the boundary — tell the host to advance to the next
+      // chapter via postMessage. The host listens for these
+      // forwarded wheel events (its `host-wheel` message handler)
+      // and runs the GSAP chapter transition.
+      try {
+        window.parent.postMessage({ type: "host-wheel", deltaY: e.deltaY }, "*");
+      } catch (err) { /* parent unreachable — ignore */ }
       return;
     }
     e.preventDefault();
