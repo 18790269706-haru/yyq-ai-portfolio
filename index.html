@@ -6,7 +6,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+SC:wght@400;500;700;900&amp;display=swap" rel="stylesheet">
-  <script defer src="https://unpkg.com/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script defer src="assets/vendor/gsap.min.js"
+          onerror="this.onerror=null;this.removeAttribute('onerror');window.__gsapLoadFailed=true;"></script>
   <style>
     /* ============================================================
        Reset & base
@@ -677,6 +678,16 @@
      is scrolled into view and re-pixellated back in.
      ------------------------------------------------------------ */
   var gsapReady = (typeof window.gsap !== "undefined");
+  // Poll for GSAP arrival up to ~3s — it loads async.
+  if (!gsapReady) {
+    var gsapWait = setInterval(function () {
+      if (typeof window.gsap !== "undefined") {
+        gsapReady = true;
+        clearInterval(gsapWait);
+      }
+    }, 60);
+    setTimeout(function () { clearInterval(gsapWait); }, 3000);
+  }
   var PIX_OUT = { filter: "blur(18px) saturate(0.4)", opacity: 0, scale: 1.04, duration: 0.6, ease: "power3.in" };
   var PIX_IN  = { filter: "blur(0px) saturate(1)",    opacity: 1, scale: 1,    duration: 0.7, ease: "power3.out", clearProps: "filter,opacity,scale" };
 
@@ -756,10 +767,14 @@
      a chapter transition.
      ------------------------------------------------------------ */
   var wheelBusy = false;
+  function scrollToSection(idx) {
+    var target = document.getElementById("section-" + idx);
+    if (!target) return;
+    var navH = (idx === 0) ? 0 : (document.querySelector(".topnav") || {}).offsetHeight || 0;
+    var top = target.getBoundingClientRect().top + window.scrollY - navH;
+    window.scrollTo({ top: top, behavior: "smooth" });
+  }
   function hostWheel(e) {
-    // Graceful fallback to native scrolling when GSAP failed to
-    // load — the user can still scroll the host window normally.
-    if (!gsapReady) return;
     if (wheelBusy) return;
     if (Math.abs(e.deltaY) < 8) return;
     wheelBusy = true;
@@ -767,7 +782,18 @@
     var target = currentSection + dir;
     if (target < 0) target = 0;
     if (target >= frames.length) target = frames.length - 1;
-    if (target !== currentSection) jumpTo(target);
+    if (target === currentSection) {
+      wheelBusy = false;
+      return;
+    }
+    if (gsapReady) {
+      jumpTo(target);
+    } else {
+      // No GSAP — native scroll as a hard fallback so the wheel
+      // still advances chapters when the vendor script failed to
+      // load. This is the path the user was hitting before.
+      scrollToSection(target);
+    }
     setTimeout(function () { wheelBusy = false; }, 850);
   }
 
