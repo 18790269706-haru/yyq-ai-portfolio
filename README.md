@@ -1,7 +1,6 @@
 # ANGELIC PROTOCOL · 个人作品集
 
 > YAO YIQING · AI Product Manager Portfolio 2026
-> 蓝黑赛博风格（Cyberpunk · 赛露露）单页滚动 + 8 章节 iframe 串联
 
 ## 目录结构
 
@@ -48,56 +47,6 @@ Haruka Yao/
         └── m07-photo-city-sea.png
 ```
 
-## 在 GitHub 上部署（GitHub Pages）
-
-### 一次性准备
-
-1. 把整个 `Haruka Yao/` 文件夹上传到 GitHub 仓库根目录：
-   ```bash
-   cd "D:\Haruka Yao"
-   git init
-   git add .
-   git commit -m "Initial portfolio deployment"
-   git branch -M main
-   git remote add origin https://github.com/<your-username>/<repo>.git
-   git push -u origin main
-   ```
-
-2. 仓库名建议用 `<your-username>.github.io` —— 这样默认站点 URL 就是 `https://<your-username>.github.io/`。
-
-### 启用 GitHub Pages
-
-1. 进仓库 `Settings → Pages`
-2. **Source**：选 `Deploy from a branch`
-3. **Branch**：选 `main`，目录 `/`（root）
-4. **Save**
-
-几分钟后（通常 30s-2min）站点上线，URL 会显示在 Pages 设置页顶部。
-
-### 自定义域名（可选）
-
-如果你有自己的域名：
-
-1. 在仓库根加一个 `CNAME` 文件（无后缀），内容是 `yourdomain.com`
-2. 在域名 DNS 加 CNAME 记录指向 `<your-username>.github.io`
-3. GitHub Pages 设置里勾选 `Enforce HTTPS`
-
-## 本地预览
-
-直接打开 `index.html` 也可以，但**强烈建议用本地 HTTP server**：
-
-```bash
-# Python 3
-cd "D:\Haruka Yao"
-python -m http.server 8000
-
-# Node.js
-npx serve .
-```
-
-打开 `http://localhost:8000/` 即可看到效果。
-
-> **为什么不直接 file:// 打开**：iframe 加载会受 CORS / same-origin 限制，部分浏览器会拦截；video 自动播放策略在 file:// 下也会更严。HTTP server 不会有这些问题。
 
 ## 技术栈
 
@@ -116,14 +65,7 @@ npx serve .
 | 06 学术档案 | 7 个媒资 · 详情卡片展开 |
 | 07 技能树 | 4 大能力方向 · 工具清单 |
 
-## 调试 & 维护
-
-- 修改某个章节页：直接编辑 `pages/xxx.html`，刷新主页即可
-- 修改资源：替换同名文件（保留英文文件名）
-- 修改章节顺序：在 `index.html` 里改 `SOURCES` 数组和 iframe 的 `data-index`
 
 ## 联系
 
 作者：YAO YIQING · 姚怡晴
-求职意向：AI 产品经理
-学校：华中科技大学
