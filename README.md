@@ -1,7 +1,6 @@
 # ANGELIC PROTOCOL · 个人作品集
 
 > YAO YIQING · AI Product Manager Portfolio 2026
-> 蓝黑赛博风格（Cyberpunk · 赛露露）单页滚动 + 8 章节 iframe 串联
 
 ## 目录结构
 
