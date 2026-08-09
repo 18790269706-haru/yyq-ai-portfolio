@@ -90,9 +90,24 @@
     position: absolute;
     inset: 0;
     z-index: -3;
+    /* Cover the viewport while preserving image proportions.
+       background-size: cover stretches to fill; position: center
+       keeps the visual subject (the contact photo) centred. */
+    background: url('../assets/contact-bg.png') center center / cover no-repeat;
+  }
+  /* Vignette overlay — darkens the top so titles read clearly
+     and softly lifts the bottom so the photo breathes. */
+  .contact__shade {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    pointer-events: none;
     background:
-      url('../assets/contact-bg.png') center 30% / cover no-repeat,
-      linear-gradient(180deg, rgba(5, 8, 16, 0.65), rgba(5, 8, 16, 0.45) 50%, rgba(5, 8, 16, 0.7));
+      linear-gradient(180deg,
+        rgba(5, 8, 16, 0.78) 0%,
+        rgba(5, 8, 16, 0.55) 35%,
+        rgba(5, 8, 16, 0.30) 60%,
+        rgba(5, 8, 16, 0.55) 100%);
   }
   @keyframes rail-pulse {
     0%, 100% { opacity: .35; transform: translateY(0); }
