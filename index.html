@@ -1,0 +1,814 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ANGELIC PROTOCOL · 01-08 · 完整静态页面</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+SC:wght@400;500;700;900&amp;display=swap" rel="stylesheet">
+  <script defer src="https://unpkg.com/gsap@3.12.5/dist/gsap.min.js"></script>
+  <style>
+    /* ============================================================
+       Reset & base
+       ============================================================ */
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #050810;
+      font-family: 'Noto Sans SC', system-ui, sans-serif;
+      color: #e8eef7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ============================================================
+       Top navigation — site-wide, always visible
+       ============================================================ */
+    .topnav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 28px;
+      background: linear-gradient(180deg, rgba(5, 8, 16, 0.92) 0%, rgba(5, 8, 16, 0.62) 100%);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      font-family: 'JetBrains Mono', 'Noto Sans SC', ui-monospace, monospace;
+      flex-wrap: wrap;
+    }
+    .topnav__brand {
+      font-family: 'Orbitron', 'Noto Sans SC', system-ui, sans-serif;
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: 0.18em;
+      color: #e8eef7;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .topnav__brand::before {
+      content: "";
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #3b82f6;
+      box-shadow: 0 0 10px #3b82f6;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+    .topnav__menu {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-left: 24px;
+      padding: 0;
+      list-style: none;
+      flex: 1;
+      flex-wrap: wrap;
+      overflow-x: visible;
+      min-width: 0;
+    }
+    .topnav__menu > li {
+      display: inline-flex;
+      align-items: center;
+    }
+    .topnav__menu::-webkit-scrollbar { display: none; }
+    .topnav__brand {
+      flex-shrink: 0;
+    }
+    .topnav__link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 10px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      color: #b8c5d9;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all .2s ease;
+      white-space: nowrap;
+      background: none;
+      text-decoration: none;
+    }
+    .topnav__link:hover {
+      color: #e8eef7;
+      border-color: rgba(96, 165, 250, 0.35);
+      background: rgba(13, 19, 34, 0.6);
+    }
+    .topnav__link.is-active {
+      color: #e8eef7;
+      border-color: rgba(96, 165, 250, 0.55);
+      background: rgba(13, 19, 34, 0.78);
+      box-shadow: 0 0 0 1px rgba(96, 165, 250, 0.18) inset;
+    }
+    .topnav__link.is-active::before {
+      content: "";
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #60a5fa;
+      box-shadow: 0 0 8px #60a5fa;
+      animation: navpulse 1.4s ease-in-out infinite;
+    }
+    .topnav__link .n {
+      font-weight: 800;
+      color: #60a5fa;
+      font-size: 12px;
+    }
+    /* (moved: .topnav__progress now lives in the parallax block
+       and renders 8 segment cells instead of a single fill) */
+    /* ============================================================
+       Top navigation — site-wide, always visible
+       ============================================================ */
+    /* Right-side wrapper for the lone primary CTA — visually
+       separated from the 7 menu items by a thin blue rule. */
+    .topnav__cta-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+      padding-left: 18px;
+      margin-left: 6px;
+      border-left: 1px solid rgba(96, 165, 250, 0.22);
+    }
+    /* "联系我" — the sole primary CTA in the whole top bar. */
+    .topnav__cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 36px;
+      padding: 0 14px;
+      border-radius: 999px;
+      font-family: 'JetBrains Mono', 'Noto Sans SC', ui-monospace, monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: transform .2s var(--ease), background .2s var(--ease), border-color .2s var(--ease), box-shadow .2s var(--ease);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .topnav__cta .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+    .topnav__cta--primary {
+      color: #050810;
+      background: #3b82f6;
+      border: 1px solid #3b82f6;
+      box-shadow: 0 0 18px rgba(59, 130, 246, 0.45);
+    }
+    .topnav__cta--primary .dot {
+      background: #050810;
+      box-shadow: none;
+    }
+    .topnav__cta--primary:hover {
+      background: #60a5fa;
+      border-color: #60a5fa;
+      box-shadow: 0 0 26px rgba(96, 165, 250, 0.65);
+      transform: translateY(-1px);
+    }
+    .topnav__cta:focus-visible {
+      outline: 2px solid #93c5fd;
+      outline-offset: 3px;
+    }
+    .topnav__cta.is-active {
+      background: #93c5fd;
+      border-color: #93c5fd;
+      color: #050810;
+      box-shadow: 0 0 22px rgba(147, 197, 253, 0.55);
+    }
+    .topnav__meta {
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      color: #6b7892;
+      text-transform: uppercase;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    @keyframes navpulse {
+      0%, 100% { opacity: 1; }
+      50%      { opacity: .5; }
+    }
+
+    /* ============================================================
+       Iframe sections
+       - Hero (index 0) sits flush at the top, behind the nav
+       - Other sections sit below the nav with a 62px gutter
+       ============================================================ */
+    .protocol-frame {
+      display: block;
+      width: 100%;
+      min-height: 100vh;
+      border: 0;
+      background: #050810;
+      vertical-align: top;
+    }
+    .protocol-frame[data-index="0"] {
+      margin-top: 0 !important;
+    }
+    .protocol-frame[data-index]:not([data-index="0"]) {
+      margin-top: 62px !important;
+    }
+    .protocol-frame {
+      scroll-margin-top: 72px;
+    }
+
+    /* ============================================================
+       Reveal animation + chapter-transition pixelate
+       ============================================================ */
+    .protocol-frame {
+      opacity: 0;
+      transform: translateY(36px);
+      will-change: opacity, transform, filter;
+      transform-origin: center center;
+    }
+    .protocol-frame.is-revealed,
+    .protocol-frame[data-index="0"] {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .protocol-frame.is-pix-out {
+      pointer-events: none;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .protocol-frame {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+    }
+
+    /* ============================================================
+       Responsive
+       ============================================================ */
+    @media (max-width: 1180px) {
+      .topnav { padding: 12px 20px; gap: 12px; }
+      .topnav__menu { gap: 4px; margin-left: 14px; }
+      .topnav__link { padding: 5px 10px; font-size: 10px; letter-spacing: 0.14em; }
+      .topnav__cta { padding: 0 12px; min-height: 34px; font-size: 10px; letter-spacing: 0.12em; }
+    }
+    @media (max-width: 960px) {
+      .topnav__menu { flex: 0 0 auto; }
+      .topnav__brand { font-size: 11px; letter-spacing: 0.14em; }
+      .topnav__brand::before { margin-right: 8px; }
+      .topnav__cta span:nth-child(2) { display: none; }   /* hide 中文「联系我」，只保留 CONTACT 英文 */
+    }
+    @media (max-width: 720px) {
+      .topnav { padding: 8px 12px; gap: 8px; flex-wrap: wrap; }
+      .topnav__menu {
+        order: 3;
+        flex-basis: 100%;
+        margin-left: 0;
+        padding-top: 4px;
+        gap: 4px;
+      }
+      .topnav__link { padding: 4px 8px; font-size: 10px; letter-spacing: 0.10em; }
+      .topnav__cta-group {
+        order: 4;
+        flex-basis: 100%;
+        padding-left: 0;
+        margin-left: 0;
+        border-left: 0;
+        padding-top: 6px;
+        justify-content: flex-start;
+      }
+      .topnav__cta { min-height: 32px; padding: 0 12px; font-size: 10px; letter-spacing: 0.12em; }
+      .protocol-frame[data-index]:not([data-index="0"]) {
+        margin-top: 56px !important;
+      }
+    }
+  /* ============================================================
+       Page-level parallax + scroll-driven atmosphere
+       ============================================================ */
+    :root {
+      --scroll-y: 0px;
+      --bg-tint:  #050810;
+      --accent-tint: #3b82f6;
+    }
+    html { background: var(--bg-tint); }
+
+    /* Fixed multi-layer parallax backdrop. Each layer moves at a
+       different rate via JS-set --scroll-y; combined with section
+       tinting it gives a slow, deep "你正在穿越协议层" feel. */
+    .parallax {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      pointer-events: none;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 20% 0%, color-mix(in oklab, var(--accent-tint) 18%, transparent) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 100%, color-mix(in oklab, var(--accent-tint) 12%, transparent) 0%, transparent 60%),
+        var(--bg-tint);
+      transition: background-color .9s var(--ease), --accent-tint 0s;
+      --mx: 0;
+      --my: 0;
+      transform: translate3d(calc(var(--mx) * 12px), calc(var(--my) * 12px), 0);
+      will-change: transform;
+    }
+    .parallax__layer {
+      position: absolute;
+      inset: -10% -5%;
+      will-change: transform;
+    }
+    .parallax__layer--grid {
+      background-image:
+        radial-gradient(circle at 1px 1px, color-mix(in oklab, var(--accent-tint) 28%, transparent) 1px, transparent 1.4px);
+      background-size: 32px 32px;
+      opacity: .35;
+      transform: translate3d(0, calc(var(--scroll-y) * -0.15), 0);
+    }
+    .parallax__layer--grid::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(to right, color-mix(in oklab, var(--accent-tint) 18%, transparent) 1px, transparent 1px),
+        linear-gradient(to bottom, color-mix(in oklab, var(--accent-tint) 12%, transparent) 1px, transparent 1px);
+      background-size: 256px 256px;
+      opacity: .4;
+    }
+    .parallax__layer--orbs {
+      transform: translate3d(0, calc(var(--scroll-y) * -0.35), 0);
+    }
+    .parallax__layer--orbs span {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: .5;
+    }
+    .parallax__layer--orbs span:nth-child(1) {
+      width: 380px; height: 380px;
+      left: -120px; top: 12%;
+      background: radial-gradient(circle, color-mix(in oklab, var(--accent-tint) 80%, transparent), transparent 70%);
+    }
+    .parallax__layer--orbs span:nth-child(2) {
+      width: 520px; height: 520px;
+      right: -160px; top: 38%;
+      background: radial-gradient(circle, color-mix(in oklab, var(--accent-tint) 60%, transparent), transparent 70%);
+    }
+    .parallax__layer--orbs span:nth-child(3) {
+      width: 280px; height: 280px;
+      left: 32%; top: 70%;
+      background: radial-gradient(circle, color-mix(in oklab, var(--accent-tint) 70%, transparent), transparent 70%);
+    }
+    .parallax__layer--scan {
+      inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent 2px,
+        rgba(255, 255, 255, 0.018) 3px,
+        transparent 4px
+      );
+      animation: parallax-scan 14s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes parallax-scan {
+      from { transform: translateY(0); }
+      to   { transform: translateY(28px); }
+    }
+
+    /* ============================================================
+       Section transition sweep — 1px blue scan across the top on
+       each chapter change. Re-triggered by toggling .is-running.
+       ============================================================ */
+    .sweep {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      z-index: 9998;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .sweep::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -30%;
+      width: 30%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, #93c5fd 40%, #3b82f6 60%, transparent);
+      box-shadow: 0 0 18px rgba(96, 165, 250, 0.6);
+      transform: translateX(0);
+    }
+    .sweep.is-running::before {
+      animation: sweep 700ms cubic-bezier(.2, .8, .2, 1);
+    }
+    @keyframes sweep {
+      from { transform: translateX(0); }
+      to   { transform: translateX(420%); }
+    }
+
+    /* ============================================================
+       Segment progress bar — 8 cells matching 8 sections
+       ============================================================ */
+    /* (cell colors — used directly by any host that needs segmented
+       progress. Currently dormant, kept for future reuse.) */
+    .topnav__progress-cell {
+      background: rgba(96, 165, 250, 0.22);
+      transition: background .25s var(--ease), box-shadow .25s var(--ease);
+      position: relative;
+      height: 2px;
+      border-radius: 1px;
+    }
+    .topnav__progress-cell.is-active {
+      background: linear-gradient(90deg, #3b82f6, #60a5fa);
+      box-shadow: 0 0 6px rgba(96, 165, 250, 0.65);
+    }
+    .topnav__progress-cell.is-past {
+      background: rgba(96, 165, 250, 0.55);
+    }
+
+    /* (HUD styles removed — flip animation no longer used) */
+
+    @keyframes hudflip {
+      0%   { transform: translateY(0)    scaleY(1);   opacity: 1; }
+      45%  { transform: translateY(-8px) scaleY(0.4); opacity: 0; }
+      55%  { transform: translateY(8px)  scaleY(0.4); opacity: 0; }
+      100% { transform: translateY(0)    scaleY(1);   opacity: 1; }
+    }
+
+    /* (HUD strip removed — top nav is the only chrome.) */
+  </style>
+</head>
+<body>
+
+<!-- ========== Page-level parallax backdrop ========== -->
+<div class="parallax" data-od-id="parallax-backdrop" aria-hidden="true">
+  <div class="parallax__layer parallax__layer--grid"></div>
+  <div class="parallax__layer parallax__layer--orbs">
+    <span></span><span></span><span></span>
+  </div>
+  <div class="parallax__layer parallax__layer--scan"></div>
+</div>
+
+<!-- ========== Section-change sweep ========== -->
+<div class="sweep" data-od-id="sweep" aria-hidden="true"></div>
+
+<!-- ========== Site-wide top navigation (always fixed) ========== -->
+<header class="topnav" data-od-id="top-nav">
+  <a class="topnav__brand" href="#section-0" data-od-target="0" data-od-id="nav-home">YAO YIQING · AI PORTFOLIO</a>
+  <ul class="topnav__menu">
+    <li><a class="topnav__link" href="#section-0" data-target="0" data-od-id="nav-01"><span class="n">01</span>首页</a></li>
+    <li><a class="topnav__link" href="#section-1" data-target="1" data-od-id="nav-02"><span class="n">02</span>个人档案</a></li>
+    <li><a class="topnav__link" href="#section-2" data-target="2" data-od-id="nav-03"><span class="n">03</span>实习经历</a></li>
+    <li><a class="topnav__link" href="#section-3" data-target="3" data-od-id="nav-04"><span class="n">04</span>实习项目</a></li>
+    <li><a class="topnav__link" href="#section-4" data-target="4" data-od-id="nav-05"><span class="n">05</span>个人项目</a></li>
+    <li><a class="topnav__link" href="#section-5" data-target="5" data-od-id="nav-06"><span class="n">06</span>学术档案</a></li>
+    <li><a class="topnav__link" href="#section-6" data-target="6" data-od-id="nav-skills"><span class="n">07</span>个人技能</a></li>
+  </ul>
+  <div class="topnav__cta-group">
+    <a class="topnav__cta topnav__cta--primary" href="#section-7" data-target="7" data-od-id="nav-contact">
+      <span class="dot" aria-hidden="true"></span>
+      <span>联系我</span>
+      <span style="opacity:.75;letter-spacing:.18em">CONTACT</span>
+    </a>
+  </div>
+
+</header>
+
+<iframe class="protocol-frame" data-index="0" id="section-0" title="SECTION 01 · HERO" allow="clipboard-write" loading="eager" scrolling="no"></iframe>
+<iframe class="protocol-frame" data-index="1" id="section-1" title="SECTION 02 · PROFILE" allow="clipboard-write" loading="eager" scrolling="no"></iframe>
+<iframe class="protocol-frame" data-index="2" id="section-2" title="SECTION 03 · EXPERIENCE" allow="clipboard-write" loading="eager" scrolling="no"></iframe>
+<iframe class="protocol-frame" data-index="3" id="section-3" title="SECTION 04 · PROJECTS" allow="clipboard-write" loading="eager" scrolling="no"></iframe>
+<iframe class="protocol-frame" data-index="4" id="section-4" title="SECTION 05 · PERSONAL" allow="clipboard-write" loading="eager" scrolling="no"></iframe>
+<iframe class="protocol-frame" data-index="5" id="section-5" title="SECTION 06 · ACADEMIC" allow="clipboard-write" loading="eager" scrolling="no"></iframe>
+<iframe class="protocol-frame" data-index="6" id="section-6" title="SECTION 07 · SKILLS" allow="clipboard-write" loading="eager" scrolling="no"></iframe>
+<iframe class="protocol-frame" data-index="7" id="section-7" title="SECTION 08 · CONTACT" allow="clipboard-write" loading="eager" scrolling="no"></iframe>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ------------------------------------------------------------
+     Section sources — order must match data-index values.
+     ------------------------------------------------------------ */
+  var SOURCES = [
+    "pages/cyber-protocol-x07-hero.html",
+    "pages/cyber-protocol-profile.html",
+    "pages/cyber-protocol-experience.html",
+    "pages/cyber-protocol-projects.html",
+    "pages/personal-projects.html",
+    "pages/academic-archive.html",
+    "pages/cyber-protocol-skill-tree.html",
+    "pages/cyber-protocol-contact.html"
+  ];
+
+  var frames   = Array.prototype.slice.call(document.querySelectorAll(".protocol-frame"));
+  var links    = Array.prototype.slice.call(document.querySelectorAll(".topnav__link"));
+  var ctas     = Array.prototype.slice.call(document.querySelectorAll(".topnav__cta"));
+  var allNav   = links.concat(ctas);
+  var sweep    = document.querySelector(".sweep");
+  var parallax = document.querySelector(".parallax");
+
+  /* ------------------------------------------------------------
+     Section tint — accent shifts as the user moves through the
+     protocol. Each entry is an OKLCH-like hsl pair so the
+     parallax layer can adopt it via CSS vars.
+     ------------------------------------------------------------ */
+  var SECTION_TINTS = [
+    { accent: "#3b82f6", label: "HERO" },       // 01 首页
+    { accent: "#6366f1", label: "PROFILE" },    // 02 个人档案
+    { accent: "#8b5cf6", label: "EXPERIENCE" }, // 03 实习经历
+    { accent: "#06b6d4", label: "PROJECTS" },   // 04 实习项目
+    { accent: "#22d3ee", label: "PERSONAL" },   // 05 个人项目
+    { accent: "#10b981", label: "ACADEMIC" },   // 06 学术档案
+    { accent: "#f59e0b", label: "SKILLS" },     // 07 个人技能
+    { accent: "#ec4899", label: "CONTACT" }     // 08 联系我
+  ];
+
+  var currentSection = 0;
+  var transitioning = false;
+  function setSection(idx) {
+    if (idx === currentSection) return;
+    var prev = currentSection;
+    currentSection = idx;
+
+    // During a GSAP chapter transition, suppress sweep re-triggers
+    // caused by IntersectionObserver / scroll-handler activity. The
+    // jumpTo() path will issue a final setSection() once the
+    // transition completes, restoring the proper active state.
+    if (transitioning) return;
+
+    // 1) parallax tint
+    if (parallax) {
+      parallax.style.setProperty("--accent-tint", SECTION_TINTS[idx].accent);
+    }
+
+    // 2) section-change sweep (only when the change is a jump, not first paint)
+    if (sweep && prev !== idx && idx > 0) {
+      sweep.classList.remove("is-running");
+      void sweep.offsetWidth;
+      sweep.classList.add("is-running");
+    }
+  }
+
+  /* ------------------------------------------------------------
+     Auto-resize each iframe to its inner document height
+     ------------------------------------------------------------ */
+  function fit(frame) {
+    var doc;
+    try {
+      doc = frame.contentDocument || (frame.contentWindow && frame.contentWindow.document);
+    } catch (err) { return; }
+    if (!doc || !doc.documentElement) return;
+
+    var height = doc.documentElement.scrollHeight;
+    if (doc.body) height = Math.max(height, doc.body.scrollHeight);
+    if (height > 0) frame.style.height = Math.ceil(height) + "px";
+  }
+
+  /* ------------------------------------------------------------
+     Bridge mouse parallax from the host page into each iframe's
+     document so the Hero's grid + scan layers react in step.
+     ------------------------------------------------------------ */
+  function bridgeMouseParallax(doc) {
+    if (!doc || !doc.documentElement) return;
+    if (doc.documentElement.dataset.mouseBridged === "1") return;
+    doc.documentElement.dataset.mouseBridged = "1";
+    window.addEventListener("mousemove", function (e) {
+      var mx = (e.clientX / window.innerWidth  - 0.5) * 2;
+      var my = (e.clientY / window.innerHeight - 0.5) * 2;
+      doc.documentElement.style.setProperty("--mx", mx.toFixed(3));
+      doc.documentElement.style.setProperty("--my", my.toFixed(3));
+    }, { passive: true });
+  }
+
+  function applyFitOverrides(doc, index) {
+    if (!doc || !doc.head) return;
+    if (doc.getElementById("protocol-fit-overrides")) return;
+    /* overscroll-behavior: contain keeps inner pages from bouncing
+       back to the host's top when they reach their end. The
+       project carousel (index 3) opts out so wheel events can
+       propagate to the host at the boundary. */
+    var contain = (index === 3) ? "auto" : "contain";
+    var style = doc.createElement("style");
+    style.id = "protocol-fit-overrides";
+    style.textContent =
+      "html, body { " +
+        "min-height: 0 !important; " +
+        "height: auto !important; " +
+        "overflow: visible !important; " +
+        "overscroll-behavior: " + contain + " !important; " +
+      "} " +
+      "body > main, body > .hero, body > .protocol-stage { min-height: 0 !important; height: auto !important; } " +
+      ".nav, .protocol-nav { display: none !important; }";
+    doc.head.appendChild(style);
+    bridgeMouseParallax(doc);
+  }
+
+  function bind(frame, index) {
+    var timer = null;
+    frame.addEventListener("load", function () {
+      applyFitOverrides(frame.contentDocument || frame.contentWindow.document, index);
+      requestAnimationFrame(function () { fit(frame); });
+      if (timer) window.clearInterval(timer);
+      timer = window.setInterval(function () { fit(frame); }, 400);
+    });
+    frame.src = SOURCES[index];
+  }
+
+  frames.forEach(bind);
+  window.addEventListener("resize", function () { frames.forEach(fit); });
+
+  /* ------------------------------------------------------------
+     Reveal animation — staggered as each iframe enters view
+     ------------------------------------------------------------ */
+  var revealObs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting && e.intersectionRatio >= 0.12) {
+        e.target.classList.add("is-revealed");
+        revealObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: [0, 0.12, 0.25] });
+  frames.forEach(function (f) {
+    var idx = parseInt(f.getAttribute("data-index"), 10);
+    if (idx === 0) { f.classList.add("is-revealed"); return; }
+    revealObs.observe(f);
+  });
+
+  /* ------------------------------------------------------------
+     Chapter transition — pixelate dissolve
+     ------------------------------------------------------------
+     The current section's iframe is blurred + desaturated +
+     scaled-out (pixelating); once it is gone the target section
+     is scrolled into view and re-pixellated back in.
+     ------------------------------------------------------------ */
+  var gsapReady = (typeof window.gsap !== "undefined");
+  var PIX_OUT = { filter: "blur(18px) saturate(0.4)", opacity: 0, scale: 1.04, duration: 0.6, ease: "power3.in" };
+  var PIX_IN  = { filter: "blur(0px) saturate(1)",    opacity: 1, scale: 1,    duration: 0.7, ease: "power3.out", clearProps: "filter,opacity,scale" };
+
+  function pixelateOut(frame) {
+    if (!gsapReady) return Promise.resolve();
+    if (frame.classList.contains("is-pix-out")) return Promise.resolve();
+    frame.classList.add("is-pix-out");
+    return new Promise(function (resolve) {
+      window.gsap.to(frame, Object.assign({}, PIX_OUT, { onComplete: resolve }));
+    });
+  }
+  function pixelateIn(frame) {
+    if (!gsapReady) return Promise.resolve();
+    return new Promise(function (resolve) {
+      window.gsap.fromTo(frame,
+        { filter: "blur(18px) saturate(0.4)", opacity: 0, scale: 1.04 },
+        Object.assign({}, PIX_IN, { onComplete: resolve })
+      );
+    });
+  }
+
+  function jumpTo(idx) {
+    if (transitioning) return;
+    var target = document.getElementById("section-" + idx);
+    if (!target) return;
+
+    var currentFrame = null;
+    frames.forEach(function (f) {
+      var r = f.getBoundingClientRect();
+      if (r.top < window.innerHeight * 0.6 && r.bottom > 0) currentFrame = f;
+    });
+
+    var navH = 0;
+    var isHero = (idx === 0);
+    if (!isHero) navH = document.querySelector(".topnav").offsetHeight;
+    var scrollTarget = window.scrollY + target.getBoundingClientRect().top - navH;
+
+    transitioning = true;
+
+    if (currentFrame && currentFrame !== target) {
+      pixelateOut(currentFrame).then(function () {
+        window.scrollTo({ top: scrollTarget, behavior: "auto" });
+        return pixelateIn(target);
+      }).then(finish);
+    } else {
+      window.scrollTo({ top: scrollTarget, behavior: "auto" });
+      pixelateIn(target).then(finish);
+    }
+
+    function finish() {
+      target.classList.add("is-revealed");
+      // Force-apply the active state for the target. Bypasses the
+      // transitioning guard so the nav highlight + tint land on the
+      // right section after the animation ends.
+      transitioning = false;
+      var prevGuard = null;
+      links.forEach(function (l, i) { l.classList.toggle("is-active", i === idx); });
+      ctas.forEach(function (c) {
+        var t = parseInt(c.getAttribute("data-target"), 10);
+        c.classList.toggle("is-active", t === idx);
+      });
+      if (parallax) {
+        parallax.style.setProperty("--accent-tint", SECTION_TINTS[idx].accent);
+      }
+      currentSection = idx;
+    }
+  }
+
+  allNav.forEach(function (link) {
+    link.addEventListener("click", function (e) {
+      e.preventDefault();
+      var idx = parseInt(link.getAttribute("data-target"), 10);
+      jumpTo(idx);
+    });
+  });
+
+  /* ------------------------------------------------------------
+     Active link highlighting + section tinting
+     ------------------------------------------------------------ */
+  function updateActive(idx) {
+    links.forEach(function (l, i) {
+      l.classList.toggle("is-active", i === idx);
+    });
+    ctas.forEach(function (c) {
+      var t = parseInt(c.getAttribute("data-target"), 10);
+      c.classList.toggle("is-active", t === idx);
+    });
+    setSection(idx);
+  }
+
+  var sectionObs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting && entry.intersectionRatio > 0.45) {
+        var idx = parseInt(entry.target.getAttribute("data-index"), 10);
+        if (!isNaN(idx)) updateActive(idx);
+      }
+    });
+  }, { threshold: [0, 0.25, 0.45, 0.6, 0.8] });
+  frames.forEach(function (f) { sectionObs.observe(f); });
+
+  /* ------------------------------------------------------------
+     Scroll handler — drives parallax + fallback section detection.
+     Parallax uses CSS var --scroll-y to translate layers at
+     different rates, with rAF throttling.
+     ------------------------------------------------------------ */
+  var ticking = false;
+  var lastY = 0;
+
+  function onScroll() {
+    lastY = window.scrollY;
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () {
+      document.documentElement.style.setProperty("--scroll-y", lastY + "px");
+
+      // Fallback section detection — if IntersectionObserver
+      // misses (e.g. tall iframe between two sections) we still
+      // pick the section closest to the viewport center.
+      var mid = lastY + window.innerHeight * 0.5;
+      var bestIdx = 0;
+      var bestDist = Infinity;
+      frames.forEach(function (f) {
+        var top = f.offsetTop;
+        var mid2 = top + f.offsetHeight * 0.5;
+        var d = Math.abs(mid2 - mid);
+        if (d < bestDist) { bestDist = d; bestIdx = parseInt(f.getAttribute("data-index"), 10); }
+      });
+      if (!isNaN(bestIdx)) updateActive(bestIdx);
+
+      ticking = false;
+    });
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  /* ------------------------------------------------------------
+     Mouse parallax — gentle layer nudge on the Hero backdrop.
+     Listens at the window level so it works across iframes too.
+     ------------------------------------------------------------ */
+  if (window.matchMedia("(pointer: fine)").matches) {
+    var mx = 0, my = 0, tx = 0, ty = 0;
+    window.addEventListener("mousemove", function (e) {
+      mx = (e.clientX / window.innerWidth  - 0.5) * 2;
+      my = (e.clientY / window.innerHeight - 0.5) * 2;
+    }, { passive: true });
+    function raf() {
+      tx += (mx - tx) * 0.08;
+      ty += (my - ty) * 0.08;
+      if (parallax) {
+        parallax.style.setProperty("--mx", tx.toFixed(3));
+        parallax.style.setProperty("--my", ty.toFixed(3));
+      }
+      requestAnimationFrame(raf);
+    }
+    raf();
+  }
+
+  /* Initial paint */
+  setSection(0);
+})();
+</script>
+
+</body></html>

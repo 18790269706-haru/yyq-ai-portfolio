@@ -1,0 +1,864 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PROFILE · 02 · 姚怡晴 · AI 关键词速览</title>
+<meta name="description" content="PROFILE 02 — 姚怡晴 · 大模型产品所需的 8 项能力与关键词速览。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+SC:wght@400;500;700;900&amp;family=Noto+Serif+SC:wght@500;700;900&amp;display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:           #050810;
+    --surface:      #0d1322;
+    --fg:           #e8eef7;
+    --fg-2:         #b8c5d9;
+    --muted:        #6b7892;
+    --border:       rgba(96, 165, 250, 0.18);
+    --border-strong:rgba(96, 165, 250, 0.35);
+    --accent:       #3b82f6;
+    --accent-2:     #60a5fa;
+    --accent-3:     #93c5fd;
+    --success:      #34d399;
+    --warn:         #fbbf24;
+    --font-display: 'Orbitron', 'Noto Sans SC', system-ui, sans-serif;
+    --font-mono:    'JetBrains Mono', 'Noto Sans SC', ui-monospace, monospace;
+    --font-body:    'Noto Sans SC', system-ui, sans-serif;
+    --font-serif:   'Noto Serif SC', 'Orbitron', serif;
+    --ease:         cubic-bezier(.2,.8,.2,1);
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; scrollbar-width: none; }
+  html::-webkit-scrollbar { display: none; }
+  body {
+    font-family: var(--font-body);
+    color: var(--fg);
+    background: var(--bg);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+  a { color: inherit; text-decoration: none; }
+
+  .profile {
+    position: relative;
+    min-height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    isolation: isolate;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    color: var(--fg);
+  }
+  .profile__bg { position: absolute; inset: 0; z-index: -3; }
+  .profile__bg img { width: 100%; height: 100%; object-fit: cover; object-position: center 40%; user-select: none; -webkit-user-drag: none; }
+
+  /* Top "sky" layer — bridges hero (dark) → profile (dark city) via light Arknights city */
+  .profile__sky {
+    position: absolute; top: 0; left: 0; right: 0; height: 52vh;
+    z-index: -2;
+    background: url('../assets/image.png') center top / cover no-repeat;
+    opacity: .85;
+  }
+  .profile__sky-fade {
+    position: absolute; top: 0; left: 0; right: 0; height: 62vh;
+    z-index: -1;
+    background: linear-gradient(180deg,
+      rgba(5,8,16,0.55) 0%,
+      rgba(5,8,16,0.35) 18%,
+      rgba(5,8,16,0.55) 45%,
+      var(--bg) 78%,
+      var(--bg) 100%);
+    pointer-events: none;
+  }
+  /* Return-to-hero floating control anchored to the sky */
+  .profile__return {
+    position: absolute;
+    top: 100px; right: 60px;
+    z-index: 4;
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 9px 16px 9px 12px;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    background: rgba(13, 19, 34, 0.72);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    font-family: var(--font-mono); font-size: 11px; font-weight: 600;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--fg);
+    transition: transform .2s var(--ease), border-color .2s var(--ease), background .2s var(--ease);
+  }
+  .profile__return::before {
+    content: ""; width: 18px; height: 1px; background: var(--accent-2);
+    box-shadow: 0 0 6px var(--accent-2);
+    transition: width .25s var(--ease);
+  }
+  .profile__return:hover { transform: translateX(-3px); border-color: var(--accent); }
+  .profile__return:hover::before { width: 26px; }
+  .profile__return:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 3px; }
+
+  /* Sky anchor — text composition over the light city at the top */
+  .profile__sky-anchor {
+    position: absolute;
+    top: 50%;
+    left: 80px;
+    transform: translateY(-30%);
+    z-index: 3;
+    max-width: 640px;
+    pointer-events: none;
+    color: #0a1020;
+  }
+  .profile__sky-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    color: rgba(10, 16, 32, 0.65);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .profile__sky-title {
+    font-family: var(--font-display);
+    font-size: clamp(40px, 5.5vw, 76px);
+    font-weight: 900;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    color: #0a1020;
+    margin-bottom: 10px;
+    text-shadow: 0 2px 24px rgba(255, 255, 255, 0.35);
+  }
+  .profile__sky-zh {
+    font-family: var(--font-serif);
+    font-size: 20px;
+    font-weight: 600;
+    color: rgba(10, 16, 32, 0.78);
+    margin-bottom: 28px;
+    letter-spacing: 0.02em;
+  }
+  .profile__sky-arrow {
+    display: inline-flex; align-items: center; gap: 14px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    color: rgba(10, 16, 32, 0.70);
+    text-transform: uppercase;
+    animation: sky-bob 2.4s var(--ease) infinite;
+  }
+  .profile__sky-arrow .arrow-circle {
+    width: 32px; height: 32px; border-radius: 50%;
+    border: 1.5px solid rgba(10, 16, 32, 0.55);
+    display: grid; place-items: center;
+    background: rgba(255, 255, 255, 0.25);
+  }
+  .profile__sky-arrow .arrow { color: rgba(10, 16, 32, 0.85); font-size: 10px; }
+  @keyframes sky-bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
+  .profile__shade {
+    position: absolute; inset: 0; z-index: -2;
+    background:
+      linear-gradient(95deg,
+        rgba(5,8,16,0.95) 0%,
+        rgba(5,8,16,0.92) 22%,
+        rgba(5,8,16,0.72) 38%,
+        rgba(5,8,16,0.32) 52%,
+        rgba(5,8,16,0.05) 68%,
+        rgba(5,8,16,0.0)  82%,
+        rgba(5,8,16,0.05) 100%),
+      linear-gradient(180deg,
+        rgba(5,8,16,0.20) 0%,
+        rgba(5,8,16,0.0)  20%,
+        rgba(5,8,16,0.05) 55%,
+        rgba(5,8,16,0.60) 100%);
+  }
+  .profile__grid {
+    position: absolute; inset: 0; z-index: -1;
+    background-image: radial-gradient(circle at 1px 1px, rgba(96,165,250,0.18) 1px, transparent 1.2px);
+    background-size: 26px 26px;
+    mask-image: linear-gradient(90deg, #000 0%, #000 35%, transparent 65%);
+    -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 35%, transparent 65%);
+    opacity: .5;
+  }
+  .profile__scan {
+    position: absolute; inset: 0; z-index: -1;
+    background: repeating-linear-gradient(to bottom, transparent 0, transparent 2px, rgba(255,255,255,0.018) 3px, transparent 4px);
+    pointer-events: none;
+    animation: scan 12s linear infinite;
+  }
+  @keyframes scan { from { transform: translateY(0); } to { transform: translateY(26px); } }
+
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 10;
+    display: flex; align-items: center; justify-content: space-between; gap: 24px;
+    padding: 22px 44px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(5,8,16,0.75), rgba(5,8,16,0));
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  }
+  .brand-mark {
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 1.5px solid var(--accent);
+    display: grid; place-items: center;
+    font-family: var(--font-display); font-weight: 800; font-size: 13px;
+    letter-spacing: 0.04em; color: var(--fg);
+    background: radial-gradient(circle at 30% 30%, rgba(96,165,250,.35), transparent 60%), rgba(13,19,34,0.6);
+  }
+  .nav__brand { display: flex; align-items: center; gap: 12px; }
+  .brand-name { font-family: var(--font-display); font-weight: 800; font-size: 14px; letter-spacing: 0.18em; color: var(--fg); }
+  .brand-version { font-family: var(--font-mono); font-weight: 500; font-size: 12px; color: var(--muted); letter-spacing: 0.04em; padding-left: 10px; border-left: 1px solid var(--border); }
+  .nav__menu { display: flex; align-items: center; gap: 28px; }
+  .nav__item {
+    position: relative;
+    font-family: var(--font-mono); font-size: 12px; font-weight: 500;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--fg-2); padding: 6px 2px;
+    transition: color .2s var(--ease);
+  }
+  .nav__item::after { content: ""; position: absolute; left: 0; right: 0; bottom: -2px; height: 1px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform .25s var(--ease); }
+  .nav__item:hover { color: var(--fg); }
+  .nav__item:hover::after { transform: scaleX(1); }
+  .nav__item.is-active { color: var(--fg); }
+  .nav__item.is-active::after { transform: scaleX(1); }
+  .nav__actions { display: flex; align-items: center; gap: 18px; }
+  .nav__sound {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.1em;
+    color: var(--fg-2); padding: 8px 4px;
+  }
+  .nav__sound::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--accent-2); box-shadow: 0 0 8px var(--accent-2); animation: pulse 2s var(--ease) infinite; }
+  .nav__lang { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; color: var(--fg-2); padding: 6px 10px; border-left: 1px solid var(--border); }
+  .nav__lang .sep { color: var(--muted); } .nav__lang .active { color: var(--fg); }
+  .nav__cta {
+    display: inline-flex; align-items: center; gap: 10px;
+    height: 40px; padding: 0 18px; border-radius: 999px;
+    border: 1px solid var(--border-strong);
+    font-family: var(--font-mono); font-size: 12px; font-weight: 600; letter-spacing: 0.16em;
+    color: var(--fg);
+    background: linear-gradient(180deg, rgba(59,130,246,0.18), rgba(59,130,246,0.04));
+    transition: transform .2s var(--ease), border-color .2s var(--ease), background .2s var(--ease);
+  }
+  .nav__cta::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--accent-2); box-shadow: 0 0 8px var(--accent-2); }
+  .nav__cta:hover { transform: translateY(-1px); border-color: var(--accent); background: linear-gradient(180deg, rgba(59,130,246,0.30), rgba(59,130,246,0.10)); }
+  .nav__cta:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 3px; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+
+  .vertical-text {
+    position: absolute; left: 18px; top: 50%;
+    transform: translateY(-50%) rotate(180deg);
+    writing-mode: vertical-rl;
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.5em;
+    color: rgba(147, 197, 253, 0.55); z-index: 3; text-transform: uppercase;
+  }
+
+  .side-rail {
+    position: fixed; right: 18px; top: 50%;
+    transform: translateY(-50%); z-index: 5;
+    width: 2px; height: 180px;
+    background: rgba(96, 165, 250, 0.18);
+    border-radius: 2px;
+  }
+  .side-rail__thumb {
+    position: absolute; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--accent-2);
+    box-shadow: 0 0 8px var(--accent-2), 0 0 16px rgba(96, 165, 250, 0.45);
+  }
+  .side-rail__thumb--top { top: 0; }
+  .side-rail__thumb--mid { top: 50%; }
+  .side-rail__thumb--bottom { top: 100%; }
+
+  .profile__content {
+    position: relative; z-index: 2;
+    align-self: center;
+    padding: 100px 60px 60px 80px;
+    max-width: 1440px;
+    width: 100%;
+  }
+  .profile__eyebrow {
+    display: inline-flex; align-items: center; gap: 12px;
+    font-family: var(--font-mono); font-size: 13px; font-weight: 500;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: #93c5fd;
+    padding: 8px 14px; border: 1px solid rgba(147, 197, 253, 0.35);
+    border-radius: 999px;
+    background: rgba(13, 19, 34, 0.55);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    margin-bottom: 26px;
+  }
+  .profile__eyebrow::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #60a5fa; box-shadow: 0 0 10px #60a5fa; }
+
+  .profile__title {
+    margin: 0 0 20px;
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: clamp(36px, 4.4vw, 64px);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: #f0f4fa;
+    text-shadow: 0 2px 18px rgba(5, 8, 16, 0.45);
+  }
+
+  .profile__lede {
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.85;
+    color: rgba(232, 238, 247, 0.82);
+    max-width: 56ch;
+    margin: 0 0 40px;
+  }
+
+  /* Two-column split: left = intro & traits, right = tag cloud.
+     align-items: stretch so both columns share the same height;
+     the left panel's body is then vertically centered to match
+     the right hotword panel's horizontal centerline. */
+  .profile__split {
+    display: grid;
+    grid-template-columns: minmax(420px, 1fr) minmax(0, 1.05fr);
+    gap: 56px;
+    align-items: stretch;
+  }
+  .profile__traits { display: flex; flex-direction: column; gap: 0; }
+  .trait {
+    display: flex; flex-direction: column; gap: 6px;
+    padding: 22px 0;
+    border-top: 1px solid rgba(147, 197, 253, 0.20);
+  }
+  .trait:last-child { border-bottom: 1px solid rgba(147, 197, 253, 0.20); }
+  .trait__title {
+    font-family: var(--font-serif);
+    font-size: 16px; font-weight: 700;
+    color: #e8eef7;
+    letter-spacing: 0.02em;
+  }
+  .trait__title em {
+    font-style: normal;
+    color: #93c5fd;
+    margin-right: 6px;
+    font-family: var(--font-serif);
+    font-weight: 900;
+  }
+  .trait__desc {
+    font-family: var(--font-body);
+    font-size: 13px; line-height: 1.7;
+    color: rgba(184, 197, 217, 0.82);
+  }
+
+  /* Left-side info panel — parallel to the right tagcloud display */
+  .profile__panel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin-top: 130px;
+    padding: 0;
+    border: 1px solid #1e40af;
+    border-radius: 4px;
+    background: linear-gradient(180deg, rgba(12, 20, 40, 0.45), rgba(5, 8, 16, 0.55));
+    box-shadow:
+      0 0 24px rgba(59, 130, 246, 0.10),
+      inset 0 0 40px rgba(0, 0, 0, 0.30);
+    overflow: hidden;
+  }
+  .profile__panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 5;
+    background:
+      linear-gradient(to right, #60a5fa 22px, transparent 22px) top    left  / 22px 2px no-repeat,
+      linear-gradient(to bottom, #60a5fa 22px, transparent 22px) top    left  / 2px 22px no-repeat,
+      linear-gradient(to left,  #60a5fa 22px, transparent 22px) top    right / 22px 2px no-repeat,
+      linear-gradient(to bottom, #60a5fa 22px, transparent 22px) top    right / 2px 22px no-repeat,
+      linear-gradient(to right, #60a5fa 22px, transparent 22px) bottom left  / 22px 2px no-repeat,
+      linear-gradient(to top,    #60a5fa 22px, transparent 22px) bottom left  / 2px 22px no-repeat,
+      linear-gradient(to left,  #60a5fa 22px, transparent 22px) bottom right / 22px 2px no-repeat,
+      linear-gradient(to top,    #60a5fa 22px, transparent 22px) bottom right / 2px 22px no-repeat;
+  }
+  .profile__panel__head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 16px;
+    background: rgba(59, 130, 246, 0.10);
+    border-bottom: 1px solid rgba(96, 165, 250, 0.25);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    color: #93c5fd;
+    text-transform: uppercase;
+    letter-spacing: 0.20em;
+    position: relative; z-index: 3;
+  }
+  .profile__panel__label::before {
+    content: "▌";
+    margin-right: 8px;
+    color: #60a5fa;
+  }
+  .profile__panel__meta { display: inline-flex; align-items: center; gap: 8px; }
+  .profile__panel__dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #60a5fa;
+    box-shadow: 0 0 6px #60a5fa;
+  }
+  .profile__panel__dot--green { background: #34d399; box-shadow: 0 0 6px #34d399; animation: pulse 1.4s var(--ease) infinite; }
+  .profile__panel__body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 40px 40px 38px;
+  }
+  .profile__panel__body .profile__title { margin-top: 0; }
+  .profile__panel__foot {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 16px;
+    background: rgba(59, 130, 246, 0.06);
+    border-top: 1px solid rgba(96, 165, 250, 0.20);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    color: rgba(147, 197, 253, 0.65);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    position: relative; z-index: 3;
+  }
+
+  .tagcloud-frame {
+    position: relative;
+    margin-top: 80px;
+    padding: 0;
+    border: 1px solid #1e40af;
+    border-radius: 4px;
+    background:
+      radial-gradient(ellipse at 50% 45%, #0c1428 0%, #050810 70%);
+    transform-origin: 50% 50%;
+    animation: tv-boot 1.4s var(--ease) both;
+  }
+  /* CRT power-on: scaleY from a hairline, brightness flash + flicker, settle */
+  @keyframes tv-boot {
+    0%   { opacity: 0;   transform: scaleY(0.006); filter: brightness(4) contrast(2.2); }
+    4%   { opacity: 1;   transform: scaleY(0.006); filter: brightness(4) contrast(2.2); }
+    7%   { opacity: 0.25;transform: scaleY(0.006); filter: brightness(2.8); }
+    10%  { opacity: 1;   transform: scaleY(0.006); filter: brightness(4); }
+    20%  { transform: scaleY(1.04); filter: brightness(1.6) contrast(1.1); }
+    24%  { opacity: 0.6; transform: scaleY(1.02); filter: brightness(0.7); }
+    28%  { opacity: 1;   transform: scaleY(0.998); filter: brightness(1.2); }
+    40%  { transform: scaleY(1.005); filter: brightness(1.1); }
+    55%  { transform: scaleY(1); filter: brightness(1); }
+    100% { transform: scaleY(1); filter: brightness(1); }
+  }
+  /* One-time horizontal scanline that sweeps top → bottom on boot */
+  @keyframes boot-sweep {
+    0%   { transform: translateY(-10%); opacity: 0; }
+    4%   { opacity: 1; }
+    35%  { transform: translateY(110%); opacity: 0.9; }
+    45%  { transform: translateY(110%); opacity: 0; }
+    100% { transform: translateY(110%); opacity: 0; }
+  }
+  .tagcloud-frame__sweep {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(96, 165, 250, 0.0) 5%,
+      rgba(147, 197, 253, 0.9) 30%,
+      rgba(219, 234, 254, 1.0) 50%,
+      rgba(147, 197, 253, 0.9) 70%,
+      rgba(96, 165, 250, 0.0) 95%,
+      transparent 100%);
+    box-shadow: 0 0 12px rgba(96, 165, 250, 0.9), 0 0 32px rgba(96, 165, 250, 0.5);
+    z-index: 6;
+    pointer-events: none;
+    animation: boot-sweep 1.2s var(--ease) both;
+  }
+    box-shadow:
+      0 0 36px rgba(59, 130, 246, 0.20),
+      inset 0 0 80px rgba(0, 0, 0, 0.55);
+    overflow: hidden;
+  }
+  /* 4 corner brackets via layered backgrounds (no extra DOM) */
+  .tagcloud-frame::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 5;
+    background:
+      linear-gradient(to right, #60a5fa 22px, transparent 22px) top    left  / 22px 2px no-repeat,
+      linear-gradient(to bottom, #60a5fa 22px, transparent 22px) top    left  / 2px 22px no-repeat,
+      linear-gradient(to left,  #60a5fa 22px, transparent 22px) top    right / 22px 2px no-repeat,
+      linear-gradient(to bottom, #60a5fa 22px, transparent 22px) top    right / 2px 22px no-repeat,
+      linear-gradient(to right, #60a5fa 22px, transparent 22px) bottom left  / 22px 2px no-repeat,
+      linear-gradient(to top,    #60a5fa 22px, transparent 22px) bottom left  / 2px 22px no-repeat,
+      linear-gradient(to left,  #60a5fa 22px, transparent 22px) bottom right / 22px 2px no-repeat,
+      linear-gradient(to top,    #60a5fa 22px, transparent 22px) bottom right / 2px 22px no-repeat;
+  }
+  /* Subtle scanline overlay (CRT) */
+  .tagcloud-frame::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 2px,
+      rgba(96, 165, 250, 0.04) 2px,
+      rgba(96, 165, 250, 0.04) 3px
+    );
+    pointer-events: none;
+    z-index: 4;
+  }
+
+  .tagcloud-frame__head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 18px;
+    background: rgba(59, 130, 246, 0.12);
+    border-bottom: 1px solid rgba(96, 165, 250, 0.30);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: #93c5fd;
+    text-transform: uppercase;
+    letter-spacing: 0.20em;
+    position: relative;
+    z-index: 3;
+  }
+  .tagcloud-frame__label::before {
+    content: "▌";
+    margin-right: 8px;
+    color: #60a5fa;
+  }
+  .tagcloud-frame__count {
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .tagcloud-frame__foot {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 16px;
+    background: rgba(59, 130, 246, 0.06);
+    border-top: 1px solid rgba(96, 165, 250, 0.20);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    color: rgba(147, 197, 253, 0.65);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    position: relative; z-index: 3;
+  }
+  .tagcloud-frame__count::before {
+    content: "";
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #34d399;
+    box-shadow: 0 0 8px #34d399;
+    animation: pulse 1.4s var(--ease) infinite;
+  }
+
+  .tagcloud {
+    display: flex; flex-wrap: wrap; justify-content: center;
+    align-items: baseline;
+    gap: 12px 18px;
+    padding: 24px 28px;
+    position: relative; z-index: 2;
+  }
+  .tag {
+    display: inline-flex; align-items: baseline;
+    font-family: var(--font-body);
+    line-height: 1.2;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    white-space: nowrap;
+    color: #f0f4fa;
+    text-shadow: 0 0 10px rgba(96, 165, 250, 0.30);
+    animation: tag-float 4.2s var(--ease) infinite;
+  }
+  /* Subtle breathing float — staggered for a wave effect across the cloud */
+  @keyframes tag-float {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-3px); }
+  }
+  .tag:nth-child(2n)    { animation-delay: 0.4s; }
+  .tag:nth-child(3n)    { animation-delay: 0.9s; }
+  .tag:nth-child(4n)    { animation-delay: 1.3s; }
+  .tag:nth-child(5n)    { animation-delay: 1.8s; }
+  .tag:nth-child(7n)    { animation-delay: 2.2s; }
+  .tag--xxl { font-family: var(--font-serif); font-size: 52px; font-weight: 900; line-height: 1; letter-spacing: -0.02em; color: #f0f4fa; text-shadow: 0 0 22px rgba(96, 165, 250, 0.55); }
+  .tag--xl  { font-family: var(--font-serif); font-size: 40px; font-weight: 900; line-height: 1; letter-spacing: -0.015em; color: #f0f4fa; text-shadow: 0 0 18px rgba(96, 165, 250, 0.45); }
+  .tag--l   { font-family: var(--font-serif); font-size: 28px; font-weight: 800; line-height: 1.05; color: #f0f4fa; }
+  .tag--m   { font-family: var(--font-serif); font-size: 22px; font-weight: 700; line-height: 1.1; color: rgba(240, 244, 250, 0.92); }
+  .tag--s   { font-family: var(--font-mono); font-size: 15px; font-weight: 500; letter-spacing: 0.02em; color: rgba(184, 197, 217, 0.85); }
+  .tag--xs  { font-family: var(--font-mono); font-size: 13px; font-weight: 500; letter-spacing: 0.04em; color: rgba(147, 197, 253, 0.65); }
+  /* Tech color variants — cyan glow spectrum (white ↔ blue) */
+  .tag--blue       { color: #60a5fa; text-shadow: 0 0 14px rgba(96, 165, 250, 0.65); }
+  .tag--blue-soft  { color: #93c5fd; text-shadow: 0 0 10px rgba(147, 197, 253, 0.50); }
+  .tag--blue-bright{ color: #dbeafe; text-shadow: 0 0 18px rgba(147, 197, 253, 0.85), 0 0 36px rgba(96, 165, 250, 0.45); animation: tag-pulse 3.2s var(--ease) infinite; }
+  @keyframes tag-pulse {
+    0%, 100% { text-shadow: 0 0 18px rgba(147, 197, 253, 0.85), 0 0 36px rgba(96, 165, 250, 0.45); }
+    50%      { text-shadow: 0 0 24px rgba(147, 197, 253, 1.00), 0 0 48px rgba(96, 165, 250, 0.65); }
+  }
+
+  .page-no {
+    position: fixed;
+    left: 60px; bottom: 80px;
+    z-index: 1;
+    font-family: var(--font-serif);
+    font-size: 220px;
+    font-weight: 900;
+    line-height: 0.8;
+    letter-spacing: -0.04em;
+    color: rgba(96, 165, 250, 0.10);
+    user-select: none;
+    pointer-events: none;
+  }
+
+  .profile__bottom {
+    position: relative; z-index: 2;
+    padding: 18px 44px 28px;
+    border-top: 1px solid var(--border);
+    background: linear-gradient(0deg, rgba(5,8,16,0.85), rgba(5,8,16,0));
+  }
+  .status-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 22px; }
+  .status {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+    letter-spacing: 0.22em; color: var(--fg-2);
+    text-transform: uppercase;
+  }
+  .status .dot { width: 7px; height: 7px; border-radius: 50%; }
+  .status .dot--blue   { background: var(--accent-2);  box-shadow: 0 0 6px var(--accent-2); }
+  .status .dot--green  { background: var(--success);   box-shadow: 0 0 6px var(--success); animation: pulse 1.6s var(--ease) infinite; }
+  .status .dot--orange { background: var(--warn);      box-shadow: 0 0 6px var(--warn); }
+  .cta-status--inline { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 12px; font-weight: 600; letter-spacing: 0.18em; color: var(--fg); padding: 6px 14px; border: 1px solid var(--border-strong); border-radius: 999px; background: rgba(13, 19, 34, 0.7); text-transform: uppercase; }
+  .cta-status--inline::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--success); box-shadow: 0 0 6px var(--success); animation: pulse 1.4s var(--ease) infinite; }
+  .footer-meta { margin-top: 10px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; color: var(--muted); }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+  }
+  @media (max-width: 1100px) {
+    .nav { padding: 18px 22px; }
+    .nav__menu { display: none; }
+    .profile__content { padding: 100px 0 60px 56px; }
+    .profile__grid-cap { grid-template-columns: repeat(2, 1fr); }
+    .profile__split { grid-template-columns: 1fr; gap: 32px; }
+    .tagcloud-frame { margin-top: 0; }
+    .profile__panel { margin-top: 0; }
+    .page-no { left: 30px; bottom: 60px; font-size: 160px; }
+  }
+  @media (max-width: 720px) {
+    .nav__sound, .nav__lang { display: none; }
+    .nav { gap: 10px; }
+    .nav__cta { padding: 0 12px; height: 36px; font-size: 11px; }
+    .profile__content { padding: 90px 22px 60px; }
+    .profile__grid-cap { grid-template-columns: 1fr; }
+    .page-no { font-size: 110px; left: 16px; bottom: 40px; }
+    .side-rail { display: none; }
+  }
+
+  @media (min-width: 1440px) and (min-height: 900px) {
+    .nav {
+      padding: 24px clamp(56px, 5vw, 96px);
+    }
+    .profile__return {
+      top: 92px;
+      right: clamp(60px, 5vw, 96px);
+    }
+    .profile__content {
+      max-width: 1680px;
+      margin: 0 auto;
+      padding: 84px clamp(56px, 5vw, 96px) 56px clamp(72px, 6vw, 120px);
+    }
+    .profile__split {
+      grid-template-columns: minmax(540px, 1.05fr) minmax(0, 0.9fr);
+      gap: clamp(56px, 5vw, 96px);
+      align-items: center;
+    }
+    .profile__traits {
+      justify-content: center;
+    }
+    .profile__eyebrow {
+      font-size: clamp(13px, 0.85vw, 15px);
+      padding: 9px 16px;
+      margin-bottom: 28px;
+    }
+    .profile__title {
+      font-size: clamp(44px, 3.8vw, 64px);
+      margin-bottom: 24px;
+    }
+    .profile__lede {
+      font-size: clamp(16px, 1vw, 18px);
+      line-height: 1.8;
+      max-width: 64ch;
+      margin-bottom: 48px;
+    }
+    .trait {
+      gap: 8px;
+      padding: 26px 0;
+    }
+    .trait__title {
+      font-size: clamp(18px, 1.2vw, 22px);
+    }
+    .trait__desc {
+      font-size: clamp(14px, 0.9vw, 16px);
+      line-height: 1.7;
+    }
+    .tagcloud-frame {
+      margin-top: 0;
+      min-height: clamp(440px, 50vh, 580px);
+      top: clamp(72px, 8vh, 112px);
+    }
+    .tagcloud {
+      padding: clamp(22px, 2.8vh, 34px) clamp(24px, 2.6vw, 38px);
+      gap: clamp(12px, 1.2vw, 18px) clamp(14px, 1.5vw, 24px);
+    }
+    .tag--xxl { font-size: clamp(46px, 3.4vw, 64px); }
+    .tag--xl { font-size: clamp(38px, 2.7vw, 50px); }
+    .tag--l { font-size: clamp(27px, 1.9vw, 34px); }
+    .tag--m { font-size: clamp(22px, 1.45vw, 27px); }
+    .tag--s { font-size: clamp(15px, 0.9vw, 17px); }
+    .tag--xs { font-size: clamp(13px, 0.8vw, 15px); }
+    .profile__bottom {
+      padding: 18px clamp(56px, 5vw, 96px) 28px;
+    }
+  }
+</style>
+</head>
+<body>
+
+
+
+<main class="profile" data-od-id="profile-stage" data-od-page-start data-od-page-end data-od-height="100vh">
+  <div class="profile__bg" aria-hidden="true"><img src="../assets/profile-bg.png" alt=""></div>
+  <div class="profile__shade" aria-hidden="true"></div>
+  <div class="profile__grid" aria-hidden="true"></div>
+  <div class="profile__scan" aria-hidden="true"></div>
+
+  <aside class="vertical-text" aria-hidden="true">
+    ANGELIC&nbsp;PROTOCOL&nbsp;·&nbsp;CAPABILITY&nbsp;INDEX&nbsp;·&nbsp;能力索引
+  </aside>
+
+  <a class="profile__return" href="cyber-protocol-x07-hero.html" data-od-id="profile-return-hero">
+    <span>BACK&nbsp;TO&nbsp;HERO</span>
+    <span style="color: var(--muted);">·</span>
+    <span>返回首页</span>
+  </a>
+
+  <div class="page-no" aria-hidden="true">2</div>
+
+  <section class="profile__content" data-od-id="profile-content">
+
+    <div class="profile__split" data-od-id="profile-split">
+
+      <div class="profile__traits" data-od-id="traits">
+        <div class="profile__eyebrow">
+          <span>PROFILE</span>
+          <span style="color: var(--muted);">·</span>
+          <span>02 / 08</span>
+        </div>
+        <h2 class="profile__title">能力索引</h2>
+        <p class="profile__lede">
+          曾主导 AI 影像创作中台、AI 视频消除工具、多模态创作平台等核心产品落地，覆盖需求调研、算法协作、产品设计、灰度验证、数据复盘、增长转化全链路。具备从 0-1 搭建 AI 创作产品、定义模型效果标准、设计创作者生态、推动端到端增长闭环的完整能力。
+        </p>
+        <div class="trait">
+          <div class="trait__title"><em>I.</em>内容网感</div>
+          <div class="trait__desc">自营二次元 + AI 创意 IP，精通数据策略到用户增长。</div>
+        </div>
+        <div class="trait">
+          <div class="trait__title"><em>II.</em>审美叙事</div>
+          <div class="trait__desc">资深 ACG 创作者，擅长高感染力视觉方案。</div>
+        </div>
+        <div class="trait">
+          <div class="trait__title"><em>III.</em>软硬结合</div>
+          <div class="trait__desc">深耕影像赛道，懂终端硬件特性与 AI 算法逻辑。</div>
+        </div>
+      </div>
+
+      <div class="tagcloud-frame" data-od-id="tag-cloud-frame">
+        <span class="tagcloud-frame__sweep" aria-hidden="true"></span>
+        <div class="tagcloud-frame__head">
+          <span class="tagcloud-frame__label">▌大模型产品所需的8项能力&nbsp;·&nbsp;关键词速览</span>
+          <span class="tagcloud-frame__count">
+            <span class="profile__panel__dot profile__panel__dot--green" aria-hidden="true"></span>
+            <span>N=40</span>
+          </span>
+        </div>
+        <div class="tagcloud" data-od-id="tag-cloud" aria-label="关键词速览">
+          <span class="tag tag--xxl">AIGC</span>
+          <span class="tag tag--l">大模型产品</span>
+          <span class="tag tag--s">Transformer</span>
+          <span class="tag tag--m tag--blue-bright">视频消除</span>
+          <span class="tag tag--xs">SET</span>
+          <span class="tag tag--xs">RLHF</span>
+          <span class="tag tag--l">多模态</span>
+          <span class="tag tag--s">LoRA</span>
+          <span class="tag tag--xxl tag--blue-bright">Prompt&nbsp;评估</span>
+          <span class="tag tag--m">AI&nbsp;漫剧</span>
+          <span class="tag tag--s">Cursor</span>
+          <span class="tag tag--s">Claude&nbsp;Code</span>
+          <span class="tag tag--s">爆款公式</span>
+          <span class="tag tag--l">数据追热</span>
+          <span class="tag tag--xs">Trae</span>
+          <span class="tag tag--s">Codex</span>
+          <span class="tag tag--xl tag--blue-bright">模型测试</span>
+          <span class="tag tag--m tag--blue">PRD</span>
+          <span class="tag tag--s">交互原型</span>
+          <span class="tag tag--m">秒剪</span>
+          <span class="tag tag--s">AI&nbsp;片场</span>
+          <span class="tag tag--s">Wan</span>
+          <span class="tag tag--xs">HunyuanVideo</span>
+          <span class="tag tag--xs">Kling</span>
+          <span class="tag tag--xs">即梦</span>
+          <span class="tag tag--l">Bench</span>
+          <span class="tag tag--s tag--blue">B&nbsp;端创作者中心</span>
+          <span class="tag tag--xs">Coze</span>
+          <span class="tag tag--xs">Dify</span>
+          <span class="tag tag--xl tag--blue-bright">特效追热</span>
+          <span class="tag tag--s">小红书</span>
+          <span class="tag tag--s">TikTok</span>
+          <span class="tag tag--xs">分镜脚本</span>
+          <span class="tag tag--m">竞品分析</span>
+          <span class="tag tag--s">用户洞察</span>
+          <span class="tag tag--xs">数据集构建</span>
+          <span class="tag tag--m">Stable&nbsp;Diffusion</span>
+          <span class="tag tag--xs">izi</span>
+          <span class="tag tag--xs">众包打分</span>
+        </div>
+        <div class="tagcloud-frame__foot">
+          <span><span class="profile__panel__dot" aria-hidden="true"></span>&nbsp;SCAN_OK</span>
+          <span>2026.08.06</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="profile__bottom" data-od-id="profile-bottom">
+    <div class="status-bar" role="list" aria-label="系统状态">
+      <div class="status" role="listitem"><span class="dot dot--blue"></span>CAPABILITY&nbsp;INDEX</div>
+      <div class="status" role="listitem"><span class="dot dot--green"></span>PROFILE&nbsp;ACTIVE</div>
+      <div class="status" role="listitem"><span class="dot dot--blue"></span>AI&nbsp;LINK</div>
+      <div class="status" role="listitem"><span class="dot dot--orange"></span>UPDATED&nbsp;2026</div>
+      <span class="cta-status--inline" role="listitem" data-od-id="profile-cta-status">ANGEL&nbsp;AI&nbsp;·&nbsp;ONLINE</span>
+    </div>
+    <div class="footer-meta">2026 · ANGELIC PROTOCOL · v2026.01</div>
+  </div>
+
+  <div class="side-rail" aria-hidden="true">
+    
+    
+    
+  </div>
+</main>
+
+<script>
+  // ponytail: minimal date stamp, runs once, no listener cleanup needed.
+  (function () {
+    var meta = document.querySelector('.footer-meta');
+    if (!meta) return;
+    var d = new Date(), p = function (n) { return n < 10 ? '0' + n : '' + n; };
+    meta.textContent = '2026 · ANGELIC PROTOCOL · ' + d.getFullYear() + '.' + p(d.getMonth() + 1) + '.' + p(d.getDate());
+  })();
+</script>
+
+
+</body></html>

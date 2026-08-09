@@ -1,0 +1,1194 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FINAL LINK · 08 · 姚怡晴 · 联系方式</title>
+<meta name="description" content="FINAL LINK 08 - 姚怡晴 · AI 产品 / 模型评测 / 多模态交流入口。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+SC:wght@400;500;700;900&amp;family=Noto+Serif+SC:wght@500;700;900&amp;display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     ANGELIC PROTOCOL · FINAL LINK
+     Tokens follow the existing series: blue-black cyber HUD.
+     ============================================================ */
+  :root {
+    --bg:            #050810;
+    --bg-2:          #0a1020;
+    --surface:       #0d1322;
+    --surface-2:     #131b2e;
+    --fg:            #e8eef7;
+    --fg-2:          #b8c5d9;
+    --muted:         #77859f;
+    --border:        rgba(96, 165, 250, 0.18);
+    --border-strong: rgba(96, 165, 250, 0.35);
+    --border-soft:   rgba(96, 165, 250, 0.10);
+
+    --accent:        #3b82f6;
+    --accent-2:      #60a5fa;
+    --accent-3:      #93c5fd;
+    --success:       #34d399;
+    --warn:          #fbbf24;
+    --danger:        #f87171;
+    --on-accent:     #071022;
+
+    --font-display: 'Orbitron', 'Noto Sans SC', system-ui, sans-serif;
+    --font-mono:    'JetBrains Mono', 'Noto Sans SC', ui-monospace, monospace;
+    --font-body:    'Noto Sans SC', system-ui, sans-serif;
+    --font-serif:   'Noto Serif SC', 'Orbitron', serif;
+
+    --ease: cubic-bezier(.2, .8, .2, 1);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  html {
+    -webkit-text-size-adjust: 100%;
+    scrollbar-width: none;
+  }
+  html::-webkit-scrollbar { display: none; }
+  body {
+    font-family: var(--font-body);
+    color: var(--fg);
+    background: var(--bg);
+    overflow-x: hidden;
+    min-height: 100vh;
+    min-height: 100dvh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  button {
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+  }
+  a { color: inherit; text-decoration: none; }
+  ::selection {
+    background: rgba(96, 165, 250, 0.34);
+    color: var(--fg);
+  }
+
+  /* ============================================================
+     Stage and background
+     ============================================================ */
+  .contact {
+    position: relative;
+    min-height: 100vh;
+    min-height: 100dvh;
+    width: 100%;
+    overflow: hidden;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    color: var(--fg);
+  }
+
+  .contact__bg {
+    position: absolute;
+    inset: 0;
+    z-index: -3;
+    background:
+      url('../assets/contact-bg.png') center 30% / cover no-repeat,
+      linear-gradient(180deg, rgba(5, 8, 16, 0.65), rgba(5, 8, 16, 0.45) 50%, rgba(5, 8, 16, 0.7));
+  }
+  @keyframes rail-pulse {
+    0%, 100% { opacity: .35; transform: translateY(0); }
+    50%      { opacity: 1; transform: translateY(44px); }
+  }
+
+  .page-no {
+    position: fixed;
+    left: 60px;
+    bottom: 82px;
+    z-index: 1;
+    font-family: var(--font-serif);
+    font-size: 220px;
+    font-weight: 900;
+    line-height: 0.8;
+    letter-spacing: -0.04em;
+    color: rgba(96, 165, 250, 0.10);
+    user-select: none;
+    pointer-events: none;
+  }
+
+  .contact__label {
+    position: absolute;
+    right: 34px;
+    bottom: 84px;
+    z-index: 0;
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(64px, 8vw, 132px);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: 0.04em;
+    color: rgba(96, 165, 250, 0.10);
+    text-transform: uppercase;
+    user-select: none;
+    pointer-events: none;
+    text-align: right;
+  }
+
+  /* ============================================================
+     Page chrome
+     ============================================================ */
+  .contact__return {
+    position: fixed;
+    top: 26px;
+    left: 60px;
+    z-index: 8;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    padding: 0 14px 0 12px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: rgba(13, 19, 34, 0.62);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--fg-2);
+    transition:
+      transform .22s var(--ease),
+      border-color .22s var(--ease),
+      color .22s var(--ease),
+      background .22s var(--ease);
+  }
+  .contact__return::before {
+    content: "←";
+    font-size: 13px;
+    color: var(--accent-2);
+    transition: transform .25s var(--ease);
+  }
+  .contact__return:hover {
+    transform: translateX(-3px);
+    border-color: var(--accent);
+    color: var(--fg);
+    background: rgba(13, 19, 34, 0.84);
+  }
+  .contact__return:hover::before { transform: translateX(-2px); }
+  .contact__return:focus-visible {
+    outline: 2px solid var(--accent-2);
+    outline-offset: 3px;
+  }
+
+  .contact__fullscreen {
+    position: fixed;
+    top: 26px;
+    right: 60px;
+    z-index: 8;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 14px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: rgba(13, 19, 34, 0.62);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--fg-2);
+    transition:
+      transform .22s var(--ease),
+      border-color .22s var(--ease),
+      color .22s var(--ease),
+      background .22s var(--ease);
+  }
+  .contact__fullscreen svg { flex: 0 0 auto; }
+  .contact__fullscreen:hover {
+    transform: translateY(-1px);
+    border-color: var(--accent);
+    color: var(--fg);
+    background: rgba(13, 19, 34, 0.84);
+  }
+  .contact__fullscreen.is-on {
+    color: var(--accent-3);
+    border-color: var(--border-strong);
+  }
+  .contact__fullscreen:focus-visible {
+    outline: 2px solid var(--accent-2);
+    outline-offset: 3px;
+  }
+
+  /* ============================================================
+     Main layout
+     ============================================================ */
+  .contact__main {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 1480px;
+    margin: 0 auto;
+    padding: 116px 60px 68px;
+    flex: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1.18fr) minmax(380px, 0.82fr);
+    gap: clamp(36px, 5vw, 92px);
+    align-items: center;
+  }
+
+  .contact__intro {
+    position: relative;
+    max-width: 800px;
+    animation: rise-in .72s var(--ease) both;
+  }
+  @keyframes rise-in {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .contact__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding: 8px 14px 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: rgba(13, 19, 34, 0.58);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    color: var(--fg-2);
+    text-transform: uppercase;
+  }
+  .contact__eyebrow .led {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 9px var(--success);
+    animation: pulse 1.6s var(--ease) infinite;
+  }
+  .contact__eyebrow .num {
+    color: var(--accent-3);
+    font-weight: 700;
+  }
+  .contact__eyebrow .sep { color: var(--muted); }
+
+  .contact__title {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: clamp(58px, 6.4vw, 100px);
+    font-weight: 900;
+    line-height: 1.2;
+    letter-spacing: 0;
+    color: var(--fg);
+    text-shadow: 0 2px 22px rgba(5, 8, 16, 0.42);
+  }
+  .contact__title-sub {
+    display: block;
+    margin-top: 14px;
+    font-family: var(--font-display);
+    font-size: clamp(22px, 2.1vw, 32px);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    line-height: 1.5;
+    color: var(--accent-3);
+    text-transform: uppercase;
+  }
+
+  .contact__lede {
+    margin: 26px 0 0;
+    max-width: 62ch;
+    font-size: 17px;
+    line-height: 1.8;
+    color: var(--fg-2);
+    text-wrap: pretty;
+  }
+
+  .contact__topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 28px;
+  }
+  .contact__topic {
+    display: inline-flex;
+    align-items: center;
+    min-height: 38px;
+    padding: 0 14px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    background: rgba(13, 19, 34, 0.62);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    line-height: 1;
+    color: var(--fg-2);
+    text-transform: uppercase;
+  }
+  .contact__topic::before {
+    content: "";
+    width: 5px;
+    height: 5px;
+    margin-right: 8px;
+    border-radius: 50%;
+    background: var(--accent-2);
+    box-shadow: 0 0 7px var(--accent-2);
+    flex: 0 0 auto;
+  }
+
+  /* ============================================================
+     Contact signal panel
+     ============================================================ */
+  .contact__signal {
+    position: relative;
+    border: 1px solid var(--border-strong);
+    border-radius: 4px;
+    background:
+      radial-gradient(ellipse at 82% 8%, rgba(59, 130, 246, 0.14), transparent 42%),
+      linear-gradient(160deg, rgba(13, 19, 34, 0.96), rgba(7, 13, 26, 0.92));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow:
+      0 26px 70px -24px rgba(0, 0, 0, 0.72),
+      inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    padding: 30px;
+    animation: panel-in .72s .08s var(--ease) both;
+  }
+  @keyframes panel-in {
+    from { opacity: 0; transform: translateY(22px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .contact__signal::before,
+  .contact__signal::after {
+    content: "";
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border: 1px solid var(--accent-2);
+    opacity: .7;
+    pointer-events: none;
+  }
+  .contact__signal::before {
+    top: -1px;
+    left: -1px;
+    border-right: 0;
+    border-bottom: 0;
+  }
+  .contact__signal::after {
+    bottom: -1px;
+    right: -1px;
+    border-left: 0;
+    border-top: 0;
+  }
+
+  .contact__signal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid var(--border);
+  }
+  .contact__signal-label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    color: var(--accent-3);
+    text-transform: uppercase;
+  }
+  .contact__signal-sub {
+    display: block;
+    margin-top: 5px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    line-height: 1.5;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  .contact__signal-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 28px;
+    padding: 0 10px;
+    border: 1px solid rgba(52, 211, 153, 0.30);
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    line-height: 1;
+    color: var(--success);
+    text-transform: uppercase;
+    background: rgba(5, 8, 16, 0.48);
+    white-space: nowrap;
+  }
+  .contact__signal-status::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 8px var(--success);
+    animation: pulse 1.5s var(--ease) infinite;
+  }
+
+  .contact__channels {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 22px;
+  }
+  .contact__channel {
+    display: grid;
+    grid-template-columns: 86px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 14px;
+    min-height: 68px;
+    padding: 12px 14px;
+    border: 1px solid var(--border-soft);
+    border-radius: 3px;
+    background: rgba(5, 8, 16, 0.36);
+    transition:
+      border-color .25s var(--ease),
+      background .25s var(--ease);
+  }
+  .contact__channel:hover {
+    border-color: var(--border-strong);
+    background: rgba(13, 19, 34, 0.64);
+  }
+  .contact__channel-key {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    line-height: 1.2;
+    color: var(--muted);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .contact__channel-key::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    transform: rotate(45deg);
+    background: var(--accent-2);
+    box-shadow: 0 0 7px var(--accent-2);
+    flex: 0 0 auto;
+  }
+  .contact__channel-value {
+    min-width: 0;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    line-height: 1.5;
+    color: var(--fg);
+    overflow-wrap: anywhere;
+  }
+  .contact__channel-arrow {
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .contact__actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    gap: 12px;
+    margin-top: 22px;
+  }
+  .contact__primary,
+  .contact__copy {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 48px;
+    padding: 0 16px;
+    border-radius: 3px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    line-height: 1;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition:
+      transform .2s var(--ease),
+      border-color .2s var(--ease),
+      background .2s var(--ease),
+      box-shadow .2s var(--ease),
+      color .2s var(--ease);
+  }
+  .contact__primary {
+    position: relative;
+    color: var(--on-accent);
+    background: var(--accent-2);
+    border: 1px solid rgba(147, 197, 253, 0.88);
+    box-shadow: 0 10px 30px -12px rgba(96, 165, 250, 0.52);
+  }
+  .contact__primary svg { flex: 0 0 auto; }
+  .contact__primary:hover {
+    transform: translateY(-2px);
+    background: var(--accent-3);
+    border-color: var(--accent-3);
+    box-shadow: 0 16px 38px -14px rgba(96, 165, 250, 0.72);
+  }
+  .contact__primary:active {
+    transform: translateY(0) scale(0.985);
+    box-shadow: 0 7px 20px -10px rgba(96, 165, 250, 0.45);
+  }
+  .contact__primary:focus-visible,
+  .contact__copy:focus-visible {
+    outline: 2px solid var(--accent-3);
+    outline-offset: 3px;
+  }
+  .contact__copy {
+    position: relative;
+    color: var(--fg);
+    background: rgba(13, 19, 34, 0.78);
+    border: 1px solid var(--border-strong);
+  }
+  .contact__copy svg { flex: 0 0 auto; }
+  .contact__copy:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent);
+    background: rgba(19, 27, 46, 0.96);
+    color: var(--fg);
+  }
+  .contact__copy:active {
+    transform: translateY(0) scale(0.985);
+  }
+  .contact__copy.is-copied {
+    border-color: rgba(52, 211, 153, 0.55);
+    color: var(--success);
+  }
+  .contact__primary.is-copied {
+    color: var(--bg);
+    background: var(--success);
+    border-color: rgba(167, 243, 208, 0.9);
+    box-shadow: 0 12px 32px -14px rgba(52, 211, 153, 0.72);
+  }
+  .contact__copy-status {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -22px;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: var(--success);
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateY(4px);
+    visibility: hidden;
+    transition: opacity .2s var(--ease), transform .2s var(--ease);
+    pointer-events: none;
+  }
+  .contact__primary.is-copied .contact__copy-status,
+  .contact__copy.is-copied .contact__copy-status {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+  }
+
+  .contact__signal-foot {
+    margin-top: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    line-height: 1.6;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  .contact__signal-foot .ready {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--fg-2);
+  }
+  .contact__signal-foot .ready::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 7px var(--success);
+  }
+
+  /* ============================================================
+     Bottom dock
+     ============================================================ */
+  .contact__bottom {
+    position: relative;
+    z-index: 2;
+    padding: 18px 60px 30px;
+    border-top: 1px solid var(--border);
+    background: linear-gradient(0deg, rgba(5, 8, 16, 0.88), rgba(5, 8, 16, 0));
+  }
+  .status-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+  }
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    line-height: 1.5;
+    color: var(--fg-2);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .status .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+  }
+  .status .dot--blue   { background: var(--accent-2); box-shadow: 0 0 6px var(--accent-2); }
+  .status .dot--green  { background: var(--success);  box-shadow: 0 0 6px var(--success); animation: pulse 1.6s var(--ease) infinite; }
+  .status .dot--orange { background: var(--warn);     box-shadow: 0 0 6px var(--warn); }
+  .cta-status--inline {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    color: var(--fg);
+    padding: 6px 14px;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    background: rgba(13, 19, 34, 0.7);
+    text-transform: uppercase;
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+  .cta-status--inline::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 6px var(--success);
+    animation: pulse 1.4s var(--ease) infinite;
+  }
+  .footer-meta {
+    margin-top: 12px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: .35; }
+  }
+
+  /* ============================================================
+     Responsive
+     ============================================================ */
+  @media (max-width: 1280px) {
+    .contact__main {
+      padding: 108px 40px 56px;
+      grid-template-columns: minmax(0, 1fr) minmax(360px, 0.86fr);
+      gap: 40px;
+    }
+    .page-no {
+      left: 30px;
+      bottom: 62px;
+      font-size: 168px;
+    }
+    .contact__label {
+      right: 22px;
+      bottom: 74px;
+      font-size: clamp(58px, 7vw, 108px);
+    }
+  }
+
+  @media (max-width: 1080px) {
+    .contact__main {
+      grid-template-columns: 1fr;
+      align-items: start;
+      padding-top: 104px;
+    }
+    .contact__intro {
+      max-width: 760px;
+    }
+    .contact__signal {
+      max-width: 720px;
+    }
+    .contact__label {
+      display: none;
+    }
+    .vertical-text {
+      display: none;
+    }
+    .side-rail {
+      display: none;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .contact__return {
+      top: 18px;
+      left: 18px;
+      min-height: 42px;
+      padding: 0 11px;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+    }
+    .contact__return .return-en {
+      display: none;
+    }
+    .contact__fullscreen {
+      top: 18px;
+      right: 18px;
+      min-height: 42px;
+      padding: 0 10px;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+    }
+    .contact__fullscreen-label {
+      display: none;
+    }
+    .contact__main {
+      padding: 96px 18px 40px;
+      gap: 28px;
+    }
+    .contact__eyebrow {
+      margin-bottom: 16px;
+      font-size: 11px;
+      letter-spacing: 0.16em;
+    }
+    .contact__title {
+      font-size: 50px;
+      line-height: 1.22;
+    }
+    .contact__title-sub {
+      font-size: 18px;
+      letter-spacing: 0.04em;
+      line-height: 1.5;
+      margin-top: 12px;
+    }
+    .contact__lede {
+      margin-top: 22px;
+      font-size: 16px;
+      line-height: 1.8;
+    }
+    .contact__topic {
+      min-height: 36px;
+      padding: 0 12px;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+    }
+    .contact__signal {
+      padding: 22px 18px;
+    }
+    .contact__signal-head {
+      align-items: flex-start;
+      gap: 12px;
+      padding-bottom: 18px;
+    }
+    .contact__signal-status {
+      font-size: 8px;
+      letter-spacing: 0.10em;
+      padding: 0 8px;
+    }
+    .contact__channel {
+      grid-template-columns: 1fr;
+      gap: 8px;
+      min-height: 0;
+      padding: 13px;
+    }
+    .contact__channel-key {
+      font-size: 9px;
+    }
+    .contact__channel-value {
+      font-size: 13px;
+      line-height: 1.55;
+    }
+    .contact__channel-arrow {
+      display: none;
+    }
+    .contact__actions {
+      grid-template-columns: 1fr;
+      margin-top: 18px;
+    }
+    .contact__primary,
+    .contact__copy {
+      width: 100%;
+      min-height: 48px;
+    }
+    .contact__signal-foot {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 22px;
+      padding-top: 14px;
+    }
+    .contact__bottom {
+      padding: 16px 16px 24px;
+    }
+    .status-bar {
+      gap: 12px;
+    }
+    .status {
+      font-size: 10px;
+      line-height: 1.5;
+    }
+    .cta-status--inline {
+      font-size: 11px;
+      padding: 5px 10px;
+    }
+    .footer-meta {
+      margin-top: 10px;
+      line-height: 1.6;
+    }
+    .page-no {
+      font-size: 110px;
+      left: 14px;
+      bottom: 40px;
+    }
+  }
+
+  @media (min-width: 1441px) {
+    .contact__main {
+      max-width: 1640px;
+      padding: clamp(104px, 10vh, 132px) clamp(56px, 5vw, 104px) clamp(64px, 7vh, 96px);
+      gap: clamp(64px, 5.5vw, 96px);
+      grid-template-columns: minmax(0, 1fr) minmax(520px, 0.92fr);
+    }
+    .contact__intro {
+      max-width: 780px;
+    }
+    .contact__title {
+      font-size: clamp(70px, 5.4vw, 98px);
+      line-height: 1.18;
+    }
+    .contact__title-sub {
+      font-size: clamp(24px, 1.6vw, 34px);
+      margin-top: 18px;
+    }
+    .contact__lede {
+      font-size: clamp(17px, 1vw, 19px);
+      max-width: 60ch;
+      line-height: 1.75;
+    }
+    .contact__signal {
+      width: 100%;
+      max-width: 680px;
+      padding: clamp(34px, 3vw, 46px);
+    }
+    .contact__channel {
+      grid-template-columns: 108px minmax(0, 1fr) auto;
+      min-height: 76px;
+      padding: 12px 14px;
+    }
+    .contact__channel-value {
+      font-size: clamp(14px, 0.9vw, 17px);
+    }
+    .contact__primary,
+    .contact__copy {
+      min-height: clamp(52px, 4.6vh, 58px);
+      font-size: clamp(12px, 0.9vw, 14px);
+      letter-spacing: 0.10em;
+    }
+    .page-no {
+      font-size: clamp(180px, 14vw, 280px);
+      left: clamp(40px, 4vw, 80px);
+      bottom: clamp(48px, 5vh, 104px);
+    }
+    .contact__label {
+      right: clamp(28px, 3vw, 70px);
+      bottom: clamp(48px, 5vh, 104px);
+      font-size: clamp(92px, 8vw, 150px);
+    }
+    .contact__bottom {
+      padding: clamp(16px, 1.6vh, 24px) clamp(48px, 4vw, 96px) clamp(24px, 2.4vh, 36px);
+    }
+    .status {
+      font-size: clamp(11px, 0.7vw, 13px);
+    }
+  }
+
+  .contact:fullscreen,
+  .contact:-webkit-full-screen {
+    width: 100vw;
+    height: 100vh;
+    background: var(--bg);
+  }
+  .contact__return {
+    top: clamp(16px, 2vh, 28px);
+    left: clamp(24px, 2.4vw, 48px);
+  }
+  .contact__fullscreen {
+    top: clamp(16px, 2vh, 28px);
+    right: clamp(24px, 2.4vw, 48px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+
+
+
+
+<aside class="vertical-text" aria-hidden="true">
+  ANGELIC&nbsp;PROTOCOL&nbsp;·&nbsp;FINAL&nbsp;LINK&nbsp;·&nbsp;联系方式
+</aside>
+<div class="side-rail" aria-hidden="true"></div>
+
+<main class="contact" data-od-id="contact-stage" data-od-page-start="" data-od-page-end="" data-od-height="100vh">
+  <div class="contact__bg" aria-hidden="true"></div>
+  <div class="contact__shade" aria-hidden="true"></div>
+  <div class="contact__grid" aria-hidden="true"></div>
+  <div class="contact__scan" aria-hidden="true"></div>
+
+  <div class="page-no" aria-hidden="true">8</div>
+  <div class="contact__label" aria-hidden="true">CONTACT</div>
+
+  <section class="contact__main" data-od-id="contact-main">
+    <div class="contact__intro" data-od-id="contact-intro">
+      <div class="contact__eyebrow">
+        <span class="led" aria-hidden="true"></span>
+        <span>FINAL&nbsp;LINK</span>
+        <span class="sep">/</span>
+        <span class="num">08&nbsp;/&nbsp;08</span>
+      </div>
+      <h1 class="contact__title">
+        欢迎来聊
+        <span class="contact__title-sub">AI 产品 · 模型评测 · 多模态</span>
+      </h1>
+      <p class="contact__lede">
+        如果你在招大模型方向的产品 / 策略产品 / 应用产品，或者只是想交流 LoRA、Prompt、AI Coding，都可以直接联系我。简历与项目细节随时发给你。
+      </p>
+      <div class="contact__topics" aria-label="交流主题">
+        <span class="contact__topic">AI PRODUCT</span>
+        <span class="contact__topic">MODEL EVAL</span>
+        <span class="contact__topic">MULTIMODAL</span>
+      </div>
+    </div>
+
+    <div class="contact__signal" data-od-id="contact-signal">
+      <div class="contact__signal-head">
+        <div>
+          <span class="contact__signal-label">CONTACT LINK</span>
+          <span class="contact__signal-sub">DIRECT CHANNEL · 2026</span>
+        </div>
+        <span class="contact__signal-status">STABLE</span>
+      </div>
+
+      <div class="contact__channels">
+        <div class="contact__channel">
+          <span class="contact__channel-key">EMAIL</span>
+          <span class="contact__channel-value" id="email-value">18790269706@163.com</span>
+          <span class="contact__channel-arrow">→</span>
+        </div>
+        <div class="contact__channel">
+          <span class="contact__channel-key">微信</span>
+          <span class="contact__channel-value" id="wechat-value">18790269706</span>
+          <span class="contact__channel-arrow">→</span>
+        </div>
+      </div>
+
+      <div class="contact__actions">
+        <button class="contact__primary" type="button" data-od-id="contact-copy-email" aria-label="复制邮箱">
+          <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="6" y="6" width="10" height="10" rx="1"></rect>
+            <path d="M14 6V4a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h2"></path>
+          </svg>
+          <span id="email-copy-label">复制邮箱</span>
+          <span class="contact__copy-status" id="email-copy-status" role="status" aria-live="polite">已复制</span>
+        </button>
+        <button class="contact__copy" type="button" data-od-id="contact-copy-wechat" aria-label="复制微信号">
+          <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="6" y="6" width="10" height="10" rx="1"></rect>
+            <path d="M14 6V4a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h2"></path>
+          </svg>
+          <span id="copy-label">复制微信号</span>
+          <span class="contact__copy-status" id="copy-status" role="status" aria-live="polite">已复制</span>
+        </button>
+      </div>
+
+      <div class="contact__signal-foot">
+        <span class="ready">RESUME READY</span>
+        <span>PORTFOLIO · 08 / 08</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="contact__bottom" data-od-id="contact-bottom">
+    <div class="status-bar" role="list" aria-label="系统状态">
+      <div class="status" role="listitem"><span class="dot dot--blue"></span>FINAL&nbsp;LINK&nbsp;ACTIVE</div>
+      <div class="status" role="listitem"><span class="dot dot--green"></span>EMAIL&nbsp;ONLINE</div>
+      <div class="status" role="listitem"><span class="dot dot--blue"></span>RESUME&nbsp;READY</div>
+      <div class="status" role="listitem"><span class="dot dot--orange"></span>UPDATED&nbsp;2026</div>
+      <span class="cta-status cta-status--inline" role="listitem" data-od-id="contact-cta-status">CONTACT&nbsp;LINK&nbsp;·&nbsp;STABLE</span>
+    </div>
+    <div class="footer-meta" id="footer-meta">2026&nbsp;·&nbsp;ANGELIC&nbsp;PROTOCOL&nbsp;·&nbsp;FINAL&nbsp;LINK&nbsp;v2026.04</div>
+  </div>
+</main>
+
+<script>
+  // ============================================================
+  // Fullscreen toggle
+  // ============================================================
+  (function () {
+    const stage = document.querySelector('.contact');
+    const btn = document.querySelector('.contact__fullscreen');
+    const label = btn && btn.querySelector('.contact__fullscreen-label');
+    if (!stage || !btn) return;
+
+    function isFullscreen() {
+      return !!(document.fullscreenElement || document.webkitFullscreenElement);
+    }
+    function syncLabel() {
+      const on = isFullscreen();
+      btn.classList.toggle('is-on', on);
+      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      if (label) label.textContent = on ? 'EXIT FULL' : 'FULLSCREEN';
+    }
+    function toggle() {
+      if (!document.fullscreenEnabled && !document.webkitFullscreenEnabled) return;
+      if (isFullscreen()) {
+        const exit = document.exitFullscreen || document.webkitExitFullscreen;
+        if (exit) exit.call(document);
+      } else {
+        const req = stage.requestFullscreen || stage.webkitRequestFullscreen;
+        if (req) req.call(stage);
+      }
+    }
+    btn.addEventListener('click', toggle);
+    document.addEventListener('fullscreenchange', syncLabel);
+    document.addEventListener('webkitfullscreenchange', syncLabel);
+    document.addEventListener('keydown', function (e) {
+      if ((e.key === 'f' || e.key === 'F') && !e.metaKey && !e.ctrlKey && !e.altKey) {
+        const tag = (e.target && e.target.tagName) || '';
+        if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+        e.preventDefault();
+        toggle();
+      }
+    });
+  })();
+
+  // ============================================================
+  // Copy email and WeChat
+  // ============================================================
+  (function () {
+    function fallbackCopy(text) {
+      const area = document.createElement('textarea');
+      area.value = text;
+      area.setAttribute('readonly', '');
+      area.style.position = 'fixed';
+      area.style.left = '-9999px';
+      document.body.appendChild(area);
+      area.select();
+      try {
+        document.execCommand('copy');
+      } catch (err) {
+        // Clipboard API not available; the visible value remains selectable.
+      }
+      document.body.removeChild(area);
+    }
+
+    function bindCopy(btn, value, label, restoreLabel) {
+      if (!btn || !value || !label) return;
+
+      let timer;
+      function copied() {
+        btn.classList.add('is-copied');
+        label.textContent = '已复制';
+        window.clearTimeout(timer);
+        timer = window.setTimeout(function () {
+          btn.classList.remove('is-copied');
+          label.textContent = restoreLabel;
+        }, 1800);
+      }
+
+      btn.addEventListener('click', function () {
+        const text = value.textContent.trim();
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(text).then(copied).catch(function () {
+            fallbackCopy(text);
+            copied();
+          });
+        } else {
+          fallbackCopy(text);
+          copied();
+        }
+      });
+    }
+
+    bindCopy(
+      document.querySelector('[data-od-id="contact-copy-email"]'),
+      document.getElementById('email-value'),
+      document.getElementById('email-copy-label'),
+      '复制邮箱'
+    );
+    bindCopy(
+      document.querySelector('[data-od-id="contact-copy-wechat"]'),
+      document.getElementById('wechat-value'),
+      document.getElementById('copy-label'),
+      '复制微信号'
+    );
+  })();
+
+  // ============================================================
+  // Live date on footer
+  // ============================================================
+  (function () {
+    const meta = document.getElementById('footer-meta');
+    if (!meta) return;
+    const stamp = new Date();
+    const pad = function (n) { return n < 10 ? '0' + n : '' + n; };
+    const ts = stamp.getFullYear() + '.' + pad(stamp.getMonth() + 1) + '.' + pad(stamp.getDate());
+    meta.textContent = '2026 · ANGELIC PROTOCOL · FINAL LINK · ' + ts;
+  })();
+</script>
+
+
+</body></html>

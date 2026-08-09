@@ -1,0 +1,1823 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PROJECTS · 04 · 实习项目 · 实战档案</title>
+<meta name="description" content="PROJECTS 04 — 姚怡晴 · 实习项目实战档案 · 模型策略、评测 Bench、创作者平台与 Web 端 AI 创作中台">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+SC:wght@400;500;700;900&amp;family=Noto+Serif+SC:wght@500;700;900&amp;display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:           #050810;
+  --surface:      #0d1322;
+  --surface-2:    #111827;
+  --fg:           #e8eef7;
+  --fg-2:         #b8c5d9;
+  --muted:        #6b7892;
+  --border:       rgba(96, 165, 250, 0.18);
+  --border-strong:rgba(96, 165, 250, 0.35);
+  --accent:       #3b82f6;
+  --accent-2:     #60a5fa;
+  --accent-3:     #93c5fd;
+  --success:      #34d399;
+  --warn:         #fbbf24;
+  --danger:       #f87171;
+  --font-display: 'Orbitron', 'Noto Sans SC', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', 'Noto Sans SC', ui-monospace, monospace;
+  --font-body:    'Noto Sans SC', system-ui, sans-serif;
+  --font-serif:   'Noto Serif SC', 'Orbitron', serif;
+  --ease:         cubic-bezier(.2,.8,.2,1);
+  --radius-sm: 4px;
+  --radius:    8px;
+  --radius-lg: 16px;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; scrollbar-width: none; }
+html::-webkit-scrollbar { display: none; }
+body {
+  font-family: var(--font-body);
+  color: var(--fg);
+  background: var(--bg);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+a { color: inherit; text-decoration: none; }
+
+/* =============================================================
+   Page stage
+   ============================================================= */
+.projects {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  isolation: isolate;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  color: var(--fg);
+}
+
+/* Page background */
+.projects__bg { position: absolute; inset: 0; z-index: -3; }
+.projects__bg img { width: 100%; height: 100%; object-fit: cover; object-position: center; background: var(--bg); user-select: none; -webkit-user-drag: none; }
+
+/* Dark shade */
+.projects__shade {
+  position: absolute; inset: 0; z-index: -2;
+  background:
+    linear-gradient(95deg,
+      rgba(5,8,16,0.97) 0%,
+      rgba(5,8,16,0.92) 25%,
+      rgba(5,8,16,0.70) 45%,
+      rgba(5,8,16,0.30) 62%,
+      rgba(5,8,16,0.05) 80%,
+      rgba(5,8,16,0.0)  100%),
+    linear-gradient(180deg,
+      rgba(5,8,16,0.25) 0%,
+      rgba(5,8,16,0.0)  25%,
+      rgba(5,8,16,0.0)  60%,
+      rgba(5,8,16,0.65) 100%);
+}
+
+/* Blue background grid */
+.projects__grid {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(rgba(96, 165, 250, 0.13) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(96, 165, 250, 0.13) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image: linear-gradient(to top right, #000 0%, #000 38%, rgba(0, 0, 0, 0.12) 62%, rgba(0, 0, 0, 0.04) 100%);
+  mask-image: linear-gradient(to top right, #000 0%, #000 38%, rgba(0, 0, 0, 0.12) 62%, rgba(0, 0, 0, 0.04) 100%);
+  pointer-events: none;
+}
+
+.projects__grid::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(96, 165, 250, 0.38) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(96, 165, 250, 0.38) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mix-blend-mode: screen;
+  opacity: 0;
+  pointer-events: none;
+  animation: grid-line-breathe 3.6s ease-in-out infinite;
+}
+
+@keyframes grid-line-breathe {
+  0%, 100% { opacity: 0; filter: drop-shadow(0 0 0 rgba(96, 165, 250, 0)); }
+  45%      { opacity: 0.9; filter: drop-shadow(0 0 14px rgba(96, 165, 250, 0.42)); }
+}
+
+/* Scanline */
+.projects__scan {
+  position: absolute; inset: 0; z-index: -1;
+  background: repeating-linear-gradient(to bottom, transparent 0, transparent 2px, rgba(255,255,255,0.015) 3px, transparent 4px);
+  pointer-events: none;
+  animation: scan 14s linear infinite;
+}
+@keyframes scan { from { transform: translateY(0); } to { transform: translateY(24px); } }
+
+/* =============================================================
+   Navigation
+   ============================================================= */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 10;
+  display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  padding: 22px 44px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(5,8,16,0.75), rgba(5,8,16,0));
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+}
+.brand-mark {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1.5px solid var(--accent);
+  display: grid; place-items: center;
+  font-family: var(--font-display); font-weight: 800; font-size: 13px;
+  letter-spacing: 0.04em; color: var(--fg);
+  background: radial-gradient(circle at 30% 30%, rgba(96,165,250,.35), transparent 60%), rgba(13,19,34,0.6);
+}
+.nav__brand { display: flex; align-items: center; gap: 12px; }
+.brand-name { font-family: var(--font-display); font-weight: 800; font-size: 14px; letter-spacing: 0.18em; color: var(--fg); }
+.brand-version { font-family: var(--font-mono); font-weight: 500; font-size: 12px; color: var(--muted); letter-spacing: 0.04em; padding-left: 10px; border-left: 1px solid var(--border); }
+.nav__menu { display: flex; align-items: center; gap: 28px; }
+.nav__item {
+  position: relative;
+  font-family: var(--font-mono); font-size: 12px; font-weight: 500;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--fg-2); padding: 6px 2px;
+  transition: color .2s var(--ease);
+}
+.nav__item::after { content: ""; position: absolute; left: 0; right: 0; bottom: -2px; height: 1px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform .25s var(--ease); }
+.nav__item:hover { color: var(--fg); }
+.nav__item:hover::after { transform: scaleX(1); }
+.nav__item.is-active { color: var(--fg); }
+.nav__item.is-active::after { transform: scaleX(1); }
+.nav__actions { display: flex; align-items: center; gap: 18px; }
+.nav__sound {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.1em;
+  color: var(--fg-2); padding: 8px 4px;
+}
+.nav__sound::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--accent-2); box-shadow: 0 0 8px var(--accent-2); animation: pulse 1.7s var(--ease) infinite; }
+.nav__lang { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; color: var(--fg-2); padding: 6px 10px; border-left: 1px solid var(--border); }
+.nav__lang .sep { color: var(--muted); } .nav__lang .active { color: var(--fg); }
+.nav__cta {
+  display: inline-flex; align-items: center; gap: 10px;
+  height: 40px; padding: 0 18px; border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  font-family: var(--font-mono); font-size: 12px; font-weight: 600; letter-spacing: 0.16em;
+  color: var(--fg);
+  background: linear-gradient(180deg, rgba(59,130,246,0.18), rgba(59,130,246,0.04));
+  transition: transform .2s var(--ease), border-color .2s var(--ease), background .2s var(--ease);
+}
+.nav__cta::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--accent-2); box-shadow: 0 0 8px var(--accent-2); }
+.nav__cta:hover { transform: translateY(-1px); border-color: var(--accent); background: linear-gradient(180deg, rgba(59,130,246,0.30), rgba(59,130,246,0.10)); }
+.nav__cta:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 3px; }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+
+/* =============================================================
+   Vertical text & side rail
+   ============================================================= */
+.vertical-text {
+  position: absolute; left: 18px; top: 50%;
+  transform: translateY(-50%) rotate(180deg);
+  writing-mode: vertical-rl;
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.5em;
+  color: rgba(147, 197, 253, 0.55); z-index: 3; text-transform: uppercase;
+}
+.side-rail {
+  position: fixed; right: 18px; top: 50%;
+  transform: translateY(-50%); z-index: 5;
+  width: 2px; height: 180px;
+  background: rgba(96, 165, 250, 0.18);
+  border-radius: 2px;
+}
+
+/* =============================================================
+   Page number
+   ============================================================= */
+.page-no {
+  position: fixed;
+  left: 60px; bottom: 80px;
+  z-index: 1;
+  font-family: var(--font-serif);
+  font-size: 220px;
+  font-weight: 900;
+  line-height: 0.8;
+  letter-spacing: -0.04em;
+  color: rgba(96, 165, 250, 0.10);
+  user-select: none;
+  pointer-events: none;
+}
+
+/* =============================================================
+   Section header
+   ============================================================= */
+.projects__header {
+  position: relative; z-index: 2;
+  align-self: start;
+  padding: 104px 60px 0 80px;
+  max-width: 1440px;
+  width: min(100%, 760px);
+}
+.projects__eyebrow {
+  display: inline-flex; align-items: center; gap: 12px;
+  font-family: var(--font-mono); font-size: 13px; font-weight: 500;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: #93c5fd;
+  padding: 8px 14px; border: 1px solid rgba(147, 197, 253, 0.35);
+  border-radius: 999px;
+  background: rgba(13, 19, 34, 0.55);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  margin-bottom: 26px;
+}
+.projects__eyebrow::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #60a5fa; box-shadow: 0 0 10px #60a5fa; }
+.projects__title {
+  margin: 0 0 12px;
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: clamp(36px, 4.4vw, 64px);
+  line-height: 1.3;
+  letter-spacing: 0;
+  color: #f0f4fa;
+  text-shadow: 0 2px 18px rgba(5, 8, 16, 0.45);
+  text-wrap: balance;
+}
+.projects__lede {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.85;
+  color: rgba(232, 238, 247, 0.82);
+  max-width: 58ch;
+  margin: 0 0 40px;
+  text-wrap: pretty;
+}
+
+/* =============================================================
+   CAROUSEL — 3D perspective data-slate cards
+   ============================================================= */
+.carousel-wrap {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 60px 60px;
+  perspective: 1400px;
+  min-height: 580px;
+}
+
+.carousel {
+  position: relative;
+  width: 100%;
+  max-width: 1100px;
+  height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
+}
+
+/* ---- Data-slate card ---- */
+.data-slate {
+  position: absolute;
+  width: 300px;
+  height: 400px;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transition: transform 0.8s cubic-bezier(.22, 1, .36, 1), opacity 0.45s var(--ease), filter 0.45s var(--ease), background 0.45s var(--ease), border-color 0.45s var(--ease), box-shadow 0.45s var(--ease);
+  clip-path: polygon(
+    12px 0%, calc(100% - 12px) 0%,
+    100% 12px, 100% calc(100% - 12px),
+    calc(100% - 12px) 100%, 12px 100%,
+    0% calc(100% - 12px), 0% 12px
+  );
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  box-shadow:
+    0 8px 32px rgba(0,0,0,0.5),
+    0 0 0 1px rgba(96, 165, 250, 0.06);
+  will-change: transform;
+}
+.data-slate:hover {
+  border-color: rgba(96, 165, 250, 0.45);
+  box-shadow:
+    0 14px 44px rgba(0,0,0,0.55),
+    0 0 0 1px rgba(96, 165, 250, 0.12),
+    0 0 24px rgba(96, 165, 250, 0.10);
+}
+.data-slate:focus-visible {
+  outline: 2px solid var(--accent-2);
+  outline-offset: 4px;
+}
+.data-slate.is-center {
+  background: linear-gradient(145deg, #111b2e 0%, #0b1322 48%, #070c18 100%);
+  border-color: rgba(96, 165, 250, 0.52);
+  box-shadow:
+    0 18px 54px rgba(0, 0, 0, 0.72),
+    0 0 0 1px rgba(96, 165, 250, 0.22),
+    0 0 42px rgba(59, 130, 246, 0.16),
+    inset 0 0 30px rgba(59, 130, 246, 0.06);
+}
+.data-slate.is-center::before {
+  background: conic-gradient(
+    from 0deg,
+    transparent,
+    rgba(96, 165, 250, 0.20) 20deg,
+    rgba(96, 165, 250, 0.62) 60deg,
+    rgba(96, 165, 250, 0.20) 100deg,
+    transparent 140deg,
+    transparent 220deg,
+    rgba(96, 165, 250, 0.20) 260deg,
+    rgba(96, 165, 250, 0.62) 300deg,
+    rgba(96, 165, 250, 0.20) 340deg,
+    transparent 360deg
+  );
+}
+.data-slate.is-center .data-slate__img img {
+  background: #02050c;
+}
+.data-slate.is-center .data-slate__ambient {
+  opacity: 0.52;
+}
+.data-slate.is-center .data-slate__socket {
+  background: linear-gradient(180deg, rgba(5, 8, 16, 0.16), transparent 8px), #0b1322;
+  border-top-color: rgba(96, 165, 250, 0.26);
+}
+.data-slate.is-center .data-slate__socket-label {
+  color: rgba(147, 197, 253, 0.82);
+}
+.data-slate.is-center .data-slate__socket-sub {
+  color: var(--fg-2);
+}
+.data-slate.is-center .data-slate__socket-tag {
+  border-color: rgba(96, 165, 250, 0.36);
+  background: rgba(59, 130, 246, 0.16);
+}
+
+/* Circuit trace glow border — the decisive flourish */
+.data-slate::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  clip-path: polygon(
+    12px 0%, calc(100% - 12px) 0%,
+    100% 12px, 100% calc(100% - 12px),
+    calc(100% - 12px) 100%, 12px 100%,
+    0% calc(100% - 12px), 0% 12px
+  );
+  padding: 1px;
+  background: conic-gradient(
+    from 0deg,
+    transparent,
+    rgba(96, 165, 250, 0.08) 20deg,
+    rgba(96, 165, 250, 0.35) 60deg,
+    rgba(96, 165, 250, 0.08) 100deg,
+    transparent 140deg,
+    transparent 220deg,
+    rgba(96, 165, 250, 0.08) 260deg,
+    rgba(96, 165, 250, 0.35) 300deg,
+    rgba(96, 165, 250, 0.08) 340deg,
+    transparent 360deg
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  animation: trace-rotate 6s linear infinite;
+}
+@keyframes trace-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Cut-corner "chip" accent dots */
+.data-slate__dot {
+  position: absolute;
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--accent-2);
+  box-shadow: 0 0 6px var(--accent-2);
+  z-index: 2;
+  pointer-events: none;
+}
+.data-slate__dot--tl { top: 10px; left: 10px; }
+.data-slate__dot--tr { top: 10px; right: 10px; }
+.data-slate__dot--bl { bottom: 10px; left: 10px; }
+.data-slate__dot--br { bottom: 10px; right: 10px; }
+
+/* Circuit trace lines (decorative) */
+.data-slate__trace {
+  position: absolute;
+  pointer-events: none;
+  z-index: 1;
+}
+.data-slate__trace--h {
+  top: 44px; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 5%, rgba(96,165,250,0.10) 20%, rgba(96,165,250,0.02) 50%, rgba(96,165,250,0.10) 80%, transparent 95%);
+}
+.data-slate__trace--v {
+  top: 0; bottom: 0; left: 44px;
+  width: 1px;
+  background: linear-gradient(180deg, transparent 5%, rgba(96,165,250,0.08) 20%, transparent 50%, rgba(96,165,250,0.08) 80%, transparent 95%);
+}
+
+/* Image area */
+.data-slate__img {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 240px;
+  overflow: hidden;
+  clip-path: polygon(
+    12px 0%, calc(100% - 12px) 0%,
+    100% 12px, 100% 240px,
+    0% 240px, 0% 12px
+  );
+}
+.data-slate__img img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+  object-position: center;
+  background: var(--bg);
+  transition: transform 0.4s var(--ease);
+}
+.data-slate:hover .data-slate__img img {
+  filter: brightness(1.1);
+}
+
+/* Ambient gradient overlay extracted from image — dynamic */
+.data-slate__ambient {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 240px;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.35;
+  transition: opacity 0.4s var(--ease);
+}
+.data-slate:hover .data-slate__ambient {
+  opacity: 0.55;
+}
+
+/* Image bottom fade */
+.data-slate__img-fade {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 60px;
+  z-index: 1;
+  pointer-events: none;
+  background: transparent;
+}
+
+/* Title area — "chip socket" design */
+.data-slate__socket {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 162px;
+  padding: 16px 20px 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  overflow: hidden;
+  border-top: 1px solid rgba(96, 165, 250, 0.10);
+  background: linear-gradient(180deg, rgba(5,8,16,0.3), transparent 8px), var(--surface-2);
+}
+.data-slate__socket-label {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(147, 197, 253, 0.50);
+  margin-bottom: 6px;
+}
+.data-slate__socket-label::before {
+  content: "";
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--accent-2);
+  box-shadow: 0 0 4px var(--accent-2);
+}
+.data-slate__socket-title {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--fg);
+  letter-spacing: 0.01em;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+.data-slate__socket-sub {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  line-height: 1.45;
+  color: var(--muted);
+  margin-top: 4px;
+  overflow-wrap: anywhere;
+}
+.data-slate__socket-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 8px;
+  min-width: 0;
+  flex-shrink: 0;
+}
+.data-slate__socket-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent-3);
+  padding: 2px 6px;
+  border: 1px solid rgba(96, 165, 250, 0.20);
+  border-radius: 2px;
+  background: rgba(59, 130, 246, 0.08);
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Carousel navigation dots */
+.carousel__dots {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 5;
+}
+.carousel__dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: rgba(96, 165, 250, 0.20);
+  border: 1px solid rgba(96, 165, 250, 0.15);
+  transition: background 0.3s var(--ease), border-color 0.3s var(--ease), box-shadow 0.3s var(--ease);
+  cursor: pointer;
+}
+.carousel__dot:hover { background: rgba(96, 165, 250, 0.40); }
+.carousel__dot.is-active {
+  background: var(--accent-2);
+  border-color: var(--accent);
+  box-shadow: 0 0 10px var(--accent-2);
+}
+
+
+/* =============================================================
+   FAN SIDEBAR — detail panel that unfolds like a fan
+   ============================================================= */
+.fan-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s var(--ease);
+}
+.fan-overlay.is-open {
+  pointer-events: auto;
+  opacity: 1;
+}
+.fan-overlay__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(5, 8, 16, 0.70);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* Fan panel container — slides from the right */
+.fan-panel {
+  position: absolute;
+  top: 0; right: 0;
+  width: min(520px, 100vw);
+  height: 100vh;
+  background: linear-gradient(180deg, rgba(13, 19, 34, 0.97), rgba(5, 8, 16, 0.99));
+  border-left: 1px solid var(--border-strong);
+  box-shadow: -20px 0 60px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.6s var(--ease);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(96, 165, 250, 0.20) transparent;
+}
+.fan-overlay.is-open .fan-panel {
+  transform: translateX(0);
+}
+
+/* Fan "rib" sections — each unfolds with staggered delay */
+.fan-rib {
+  opacity: 0;
+  transform: translateX(30px) scaleY(0.96);
+  transform-origin: left center;
+  transition: opacity 0.5s var(--ease), transform 0.5s var(--ease);
+}
+.fan-overlay.is-open .fan-rib {
+  opacity: 1;
+  transform: translateX(0) scaleY(1);
+}
+.fan-overlay.is-open .fan-rib:nth-child(1) { transition-delay: 0.1s; }
+.fan-overlay.is-open .fan-rib:nth-child(2) { transition-delay: 0.18s; }
+.fan-overlay.is-open .fan-rib:nth-child(3) { transition-delay: 0.26s; }
+.fan-overlay.is-open .fan-rib:nth-child(4) { transition-delay: 0.34s; }
+.fan-overlay.is-open .fan-rib:nth-child(5) { transition-delay: 0.42s; }
+.fan-overlay.is-open .fan-rib:nth-child(6) { transition-delay: 0.5s; }
+
+/* Fan header */
+.fan-panel__head {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(13, 19, 34, 0.95);
+  backdrop-filter: blur(8px);
+}
+.fan-panel__close {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--border-strong);
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  color: var(--fg-2);
+  transition: background 0.2s var(--ease), border-color 0.2s var(--ease), color 0.2s var(--ease);
+}
+.fan-panel__close:hover { background: rgba(96, 165, 250, 0.15); border-color: var(--accent); color: var(--fg); }
+.fan-panel__close:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 3px; }
+.fan-panel__badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--font-mono); font-size: 10px;
+  font-weight: 600; letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(147, 197, 253, 0.60);
+}
+.fan-panel__badge::before {
+  content: "";
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--accent-2);
+  box-shadow: 0 0 6px var(--accent-2);
+}
+
+/* Detail image zoom overlay */
+.zoom-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  padding: 22px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s var(--ease);
+}
+.zoom-overlay.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.zoom-overlay__backdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  cursor: zoom-out;
+  background: rgba(2, 5, 10, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.zoom-overlay__stage {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  width: min(1180px, calc(100vw - 64px));
+  max-width: 100%;
+}
+.zoom-overlay__frame {
+  position: relative;
+  z-index: 1;
+  flex: 0 1 auto;
+  min-width: 0;
+  width: fit-content;
+  max-width: min(1080px, calc(100vw - 180px));
+  max-height: calc(100vh - 52px);
+  margin: 0;
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.75);
+}
+.zoom-overlay__frame img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: calc(100vh - 132px);
+  object-fit: contain;
+  background: var(--bg);
+}
+.zoom-overlay__caption {
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 10px 16px;
+  border-top: 1px solid rgba(96, 165, 250, 0.16);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  background: rgba(13, 19, 34, 0.96);
+}
+.zoom-overlay__close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 17px;
+  color: var(--fg);
+  background: rgba(5, 8, 16, 0.78);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  transition: background 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+.zoom-overlay__close:hover {
+  background: rgba(96, 165, 250, 0.16);
+  border-color: var(--accent-2);
+}
+.zoom-overlay__close:focus-visible,
+.zoom-overlay__backdrop:focus-visible {
+  outline: 2px solid var(--accent-2);
+  outline-offset: 3px;
+}
+.zoom-overlay__nav {
+  position: relative;
+  z-index: 2;
+  flex: 0 0 48px;
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 30px;
+  line-height: 1;
+  color: var(--fg);
+  background: rgba(5, 8, 16, 0.82);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  transition: background 0.2s var(--ease), border-color 0.2s var(--ease), opacity 0.2s var(--ease);
+}
+.zoom-overlay__nav:hover:not(:disabled) {
+  background: rgba(96, 165, 250, 0.16);
+  border-color: var(--accent-2);
+}
+.zoom-overlay__nav:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+.zoom-overlay__nav:focus-visible {
+  outline: 2px solid var(--accent-2);
+  outline-offset: 3px;
+}
+
+/* Fan hero image */
+.fan-rib--hero {
+  height: auto;
+  overflow: hidden;
+  position: relative;
+  border-bottom: 1px solid var(--border);
+}
+.fan-rib--hero img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  background: var(--bg);
+}
+.fan-rib--hero .fan-rib__shade {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 80px;
+  background: transparent;
+}
+
+/* Scrollable detail media rail — one screenshot at a time, different screen first */
+.fan-rib--media-scroll {
+  position: relative;
+  padding: 22px 56px;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+  background: rgba(5, 8, 16, 0.35);
+}
+.fan-rib--media-scroll__viewport {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 0;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.fan-rib--media-scroll__viewport::-webkit-scrollbar {
+  display: none;
+}
+.fan-rib__media-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 26px;
+  line-height: 1;
+  color: var(--fg);
+  background: rgba(5, 8, 16, 0.82);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  transition: background 0.2s var(--ease), border-color 0.2s var(--ease), opacity 0.2s var(--ease);
+}
+.fan-rib__media-arrow--prev { left: 6px; }
+.fan-rib__media-arrow--next { right: 6px; }
+.fan-rib__media-arrow:hover:not(:disabled) {
+  background: rgba(96, 165, 250, 0.16);
+  border-color: var(--accent-2);
+}
+.fan-rib__media-arrow:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.fan-rib__media-arrow:focus-visible {
+  outline: 2px solid var(--accent-2);
+  outline-offset: 3px;
+}
+.fan-rib__media-cell {
+  flex: 0 0 100%;
+  margin: 0;
+  min-width: 0;
+  scroll-snap-align: start;
+  scroll-snap-stop: normal;
+  position: relative;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  transform: scale(0.86);
+  transform-origin: center center;
+  opacity: 0.72;
+  transition: transform 0.9s cubic-bezier(.22, 1, .36, 1), opacity 0.6s var(--ease), border-color 0.4s var(--ease), box-shadow 0.4s var(--ease);
+  will-change: transform, opacity;
+}
+.fan-rib__media-cell.is-active {
+  transform: scale(1);
+  opacity: 1;
+  border-color: rgba(96, 165, 250, 0.42);
+  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.46);
+  z-index: 2;
+}
+.fan-rib__media-cell img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  object-position: center;
+  background: var(--bg);
+}
+.fan-rib__media-cap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 10px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  border-top: 1px solid rgba(96, 165, 250, 0.12);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: rgba(5, 8, 16, 0.55);
+}
+.fan-rib__media-cap em {
+  display: inline-flex;
+  align-items: center;
+  margin-left: auto;
+  color: rgba(147, 197, 253, 0.56);
+  white-space: nowrap;
+}
+img[data-zoom] {
+  cursor: zoom-in;
+}
+.fan-rib__media-cell img[data-zoom]:hover,
+.fan-rib--hero img[data-zoom]:hover {
+  filter: brightness(1.1);
+}
+.fan-rib__media-cell img[data-zoom]:focus-visible,
+.fan-rib--hero img[data-zoom]:focus-visible {
+  outline: 2px solid var(--accent-2);
+  outline-offset: -3px;
+}
+
+/* Fan content sections */
+.fan-rib--content {
+  padding: 0;
+}
+.fan-rib__section {
+  padding: 22px 26px;
+  border-bottom: 1px solid rgba(96, 165, 250, 0.08);
+}
+.fan-rib__section:last-child {
+  border-bottom: 0;
+}
+.fan-rib__label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(147, 197, 253, 0.55);
+  margin-bottom: 8px;
+}
+.fan-rib__title {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--fg);
+  margin-bottom: 6px;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+.fan-rib__subtitle {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 1.65;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+.fan-rib__desc {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.8;
+  color: rgba(232, 238, 247, 0.82);
+  overflow-wrap: anywhere;
+}
+.fan-rib__meta-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.fan-rib__meta-item {
+  padding: 12px;
+  min-height: 78px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+  border: 1px solid rgba(96, 165, 250, 0.10);
+  border-radius: 4px;
+  background: rgba(5, 8, 16, 0.3);
+}
+.fan-rib__meta-key {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(147, 197, 253, 0.45);
+  margin-bottom: 4px;
+}
+.fan-rib__meta-val {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.55;
+  color: var(--fg-2);
+  overflow-wrap: anywhere;
+}
+.fan-rib__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
+}
+.fan-rib__tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--accent-3);
+  padding: 3px 8px;
+  border: 1px solid rgba(96, 165, 250, 0.18);
+  border-radius: 2px;
+  background: rgba(59, 130, 246, 0.06);
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+/* =============================================================
+   Bottom dock
+   ============================================================= */
+.projects__bottom {
+  position: relative; z-index: 2;
+  padding: 18px 44px 28px;
+  border-top: 1px solid var(--border);
+  background: linear-gradient(0deg, rgba(5,8,16,0.85), rgba(5,8,16,0));
+}
+.status-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 22px; }
+.status {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+  letter-spacing: 0.22em; color: var(--fg-2);
+  text-transform: uppercase;
+}
+.status .dot { width: 7px; height: 7px; border-radius: 50%; }
+.status .dot--blue   { background: var(--accent-2);  box-shadow: 0 0 6px var(--accent-2); }
+.status .dot--green  { background: var(--success);   box-shadow: 0 0 6px var(--success); animation: pulse 1.4s var(--ease) infinite; }
+.status .dot--orange { background: var(--warn);      box-shadow: 0 0 6px var(--warn); }
+.cta-status--inline { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 12px; font-weight: 600; letter-spacing: 0.18em; color: var(--fg); padding: 6px 14px; border: 1px solid var(--border-strong); border-radius: 999px; background: rgba(13, 19, 34, 0.7); text-transform: uppercase; }
+.cta-status--inline::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--success); box-shadow: 0 0 6px var(--success); animation: pulse 1.25s var(--ease) infinite; }
+.footer-meta { margin-top: 10px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; color: var(--muted); }
+
+/* =============================================================
+   Responsive
+   ============================================================= */
+@media (max-width: 1100px) {
+  .nav { padding: 18px 22px; }
+  .nav__menu { display: none; }
+  .projects__header { padding: 96px 22px 0 56px; }
+  .carousel-wrap { padding: 0 22px 60px; }
+  .carousel { max-width: 100%; }
+  .data-slate { width: 260px; height: 360px; }
+  .data-slate__img { height: 210px; }
+  .data-slate__socket { height: 150px; padding: 14px 16px 16px; }
+  .data-slate__socket-title { font-size: 15px; }
+  .fan-panel { width: 460px; }
+  .page-no { left: 30px; bottom: 60px; font-size: 160px; }
+  .vertical-text { display: none; }
+}
+@media (max-width: 720px) {
+  .nav__sound, .nav__lang { display: none; }
+  .nav { gap: 10px; }
+  .nav__cta { padding: 0 12px; height: 36px; font-size: 11px; }
+  .projects__header { padding: 90px 16px 0; }
+  .projects__lede { font-size: 14px; }
+  .carousel-wrap { padding: 0 16px 60px; min-height: 460px; }
+  .carousel { height: 400px; }
+  .data-slate { width: 220px; height: 310px; }
+  .data-slate__img { height: 180px; }
+  .data-slate__socket { height: 130px; padding: 12px 14px 14px; }
+  .data-slate__socket-title { font-size: 14px; }
+  .data-slate__socket-sub { font-size: 10px; }
+  .data-slate__socket-tag { display: none; }
+  .fan-panel { width: 100vw; }
+  .fan-rib--hero { height: auto; }
+  .fan-rib--media-scroll { padding: 20px 52px; }
+  .fan-rib__media-arrow { width: 44px; height: 44px; font-size: 24px; }
+  .zoom-overlay { padding: 12px; }
+  .zoom-overlay__stage { gap: 6px; width: 100%; }
+  .zoom-overlay__frame { max-width: calc(100% - 100px); }
+  .zoom-overlay__nav { flex: 0 0 44px; width: 44px; height: 44px; font-size: 24px; }
+  .fan-rib__media-cell { flex-basis: 100%; }
+  .fan-rib__media-cell img { height: auto; }
+  .fan-rib__title { font-size: 22px; }
+  .fan-rib__section { padding: 18px 18px; }
+  .fan-rib__meta-item { min-height: auto; }
+  .fan-rib__meta-grid { grid-template-columns: 1fr; }
+  .page-no { font-size: 110px; left: 16px; bottom: 40px; }
+  .side-rail { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+}
+</style>
+</head>
+<body>
+
+<main class="projects" data-od-id="projects-stage" data-od-page-start="" data-od-page-end="" data-od-height="1200">
+  <div class="projects__bg" aria-hidden="true"><img src="../assets/projects/hero%E8%83%8C%E6%99%AF%E5%9B%BE1-2.png" alt=""></div>
+  <div class="projects__shade" aria-hidden="true"></div>
+  <div class="projects__grid" data-od-id="background-grid" aria-hidden="true"></div>
+  <div class="projects__scan" aria-hidden="true"></div>
+
+  <aside class="vertical-text" aria-hidden="true">
+    ANGELIC&nbsp;PROTOCOL&nbsp;·&nbsp;INTERNSHIP&nbsp;FIELD&nbsp;LOG&nbsp;·&nbsp;实习项目实战档案
+  </aside>
+
+  
+
+  <div class="page-no" aria-hidden="true">4</div>
+
+  <!-- Section header -->
+  <section class="projects__header" data-od-id="projects-header">
+    <div class="projects__eyebrow">
+      <span>INTERNSHIP&nbsp;PROJECTS</span>
+      <span style="color: var(--muted);">·</span>
+      <span>04 / 08</span>
+    </div>
+    <h2 class="projects__title" data-od-id="projects-title">实战档案</h2>
+    <p class="projects__lede">
+      4 个来自大厂实习的 AI 创作项目，覆盖模型策略测试、视频消除评测、创作者平台设计与 Web 端 AI 创作中台搭建。每个项目都包含真实的业务问题、角色贡献、量化结果与当前状态。
+    </p>
+  </section>
+
+  <!-- ========== CAROUSEL ========== -->
+  <div class="carousel-wrap" data-od-id="carousel-wrap">
+    <div class="carousel" id="carousel" data-od-id="carousel">
+
+      <!-- Card 1 (active center) -->
+      <div class="data-slate is-center" data-index="0" data-project="ai-studio" data-od-id="project-card-ai-studio" style="z-index:5;transform:translateX(0) scale(1.36);opacity:1;filter:blur(0);">
+        <div class="data-slate__dot data-slate__dot--tl"></div>
+        <div class="data-slate__dot data-slate__dot--tr"></div>
+        <div class="data-slate__dot data-slate__dot--bl"></div>
+        <div class="data-slate__dot data-slate__dot--br"></div>
+        <div class="data-slate__trace data-slate__trace--h"></div>
+        <div class="data-slate__trace data-slate__trace--v"></div>
+        <div class="data-slate__img">
+          <div class="data-slate__ambient" style="background:linear-gradient(135deg, rgba(59,130,246,0.4), rgba(139,92,246,0.2));"></div>
+          <img src="../assets/projects/aipc-1-cover.jpg" alt="AI Studio 模型策略测试" loading="lazy">
+          <div class="data-slate__img-fade"></div>
+        </div>
+        <div class="data-slate__socket">
+          <span class="data-slate__socket-label">PROJECT 01</span>
+          <div class="data-slate__socket-title">AI Studio 模型策略测试</div>
+          <div class="data-slate__socket-sub">AI 片场 1.0 灰度版 · 15s~1min 短片</div>
+          <div class="data-slate__socket-tags">
+            <span class="data-slate__socket-tag">策略产品</span>
+            <span class="data-slate__socket-tag">A/B 实验</span>
+            <span class="data-slate__socket-tag">视频生成</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="data-slate" data-index="1" data-project="mj-erase-bench" data-od-id="project-card-mj-erase-bench" style="z-index:4;transform:translateX(360px) scale(0.84);opacity:0.5;filter:blur(1px);">
+        <div class="data-slate__dot data-slate__dot--tl"></div>
+        <div class="data-slate__dot data-slate__dot--tr"></div>
+        <div class="data-slate__dot data-slate__dot--bl"></div>
+        <div class="data-slate__dot data-slate__dot--br"></div>
+        <div class="data-slate__trace data-slate__trace--h"></div>
+        <div class="data-slate__trace data-slate__trace--v"></div>
+        <div class="data-slate__img">
+          <div class="data-slate__ambient" style="background:linear-gradient(135deg, rgba(34,197,94,0.3), rgba(59,130,246,0.3));"></div>
+          <img src="../assets/projects/mj-erase-bench.jpg" alt="MJ-Erase-Bench" loading="lazy">
+          <div class="data-slate__img-fade"></div>
+        </div>
+        <div class="data-slate__socket">
+          <span class="data-slate__socket-label">PROJECT 02</span>
+          <div class="data-slate__socket-title">MJ-Erase-Bench</div>
+          <div class="data-slate__socket-sub">视频消除评测 · 27 类场景 × 10+ 模型</div>
+          <div class="data-slate__socket-tags">
+            <span class="data-slate__socket-tag">模型评测</span>
+            <span class="data-slate__socket-tag">Bench</span>
+            <span class="data-slate__socket-tag">视频消除</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="data-slate" data-index="2" data-project="creator-platform" data-od-id="project-card-creator-platform" style="z-index:4;transform:translateX(360px) scale(0.85);opacity:0.5;filter:blur(1px);">
+        <div class="data-slate__dot data-slate__dot--tl"></div>
+        <div class="data-slate__dot data-slate__dot--tr"></div>
+        <div class="data-slate__dot data-slate__dot--bl"></div>
+        <div class="data-slate__dot data-slate__dot--br"></div>
+        <div class="data-slate__trace data-slate__trace--h"></div>
+        <div class="data-slate__trace data-slate__trace--v"></div>
+        <div class="data-slate__img">
+          <div class="data-slate__ambient" style="background:linear-gradient(135deg, rgba(239,68,68,0.3), rgba(249,115,22,0.25));"></div>
+          <img src="../assets/projects/%E5%8D%83%E9%97%AE%E5%88%9B%E4%BD%9C%E8%80%85%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0.png" alt="AI 创作者平台设计" loading="lazy">
+          <div class="data-slate__img-fade"></div>
+        </div>
+        <div class="data-slate__socket">
+          <span class="data-slate__socket-label">PROJECT 03</span>
+          <div class="data-slate__socket-title">AI 创作者平台设计</div>
+          <div class="data-slate__socket-sub">Prompt 模板 · LoRA 创作 · 任务线上化</div>
+          <div class="data-slate__socket-tags">
+            <span class="data-slate__socket-tag">Prompt</span>
+            <span class="data-slate__socket-tag">LoRA</span>
+            <span class="data-slate__socket-tag">创作者平台</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="data-slate" data-index="3" data-project="creation-camera" data-od-id="project-card-creation-camera" style="z-index:3;transform:translateX(720px) scale(0.70);opacity:0.25;filter:blur(2px);">
+        <div class="data-slate__dot data-slate__dot--tl"></div>
+        <div class="data-slate__dot data-slate__dot--tr"></div>
+        <div class="data-slate__dot data-slate__dot--bl"></div>
+        <div class="data-slate__dot data-slate__dot--br"></div>
+        <div class="data-slate__trace data-slate__trace--h"></div>
+        <div class="data-slate__trace data-slate__trace--v"></div>
+        <div class="data-slate__img">
+          <div class="data-slate__ambient" style="background:linear-gradient(135deg, rgba(168,85,247,0.35), rgba(59,130,246,0.25));"></div>
+          <img src="../assets/projects/vivo-AI%E5%88%9B%E4%BD%9Cweb%E7%AB%AF.png" alt="创作相机 Web 端" loading="lazy">
+          <div class="data-slate__img-fade"></div>
+        </div>
+        <div class="data-slate__socket">
+          <span class="data-slate__socket-label">PROJECT 04</span>
+          <div class="data-slate__socket-title">创作相机 Web 端</div>
+          <div class="data-slate__socket-sub">AI 创作中台 0→1 · 6 功能 + 5 场漫展</div>
+          <div class="data-slate__socket-tags">
+            <span class="data-slate__socket-tag">Web端</span>
+            <span class="data-slate__socket-tag">0→1</span>
+            <span class="data-slate__socket-tag">画布 Agent</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Dots -->
+    <div class="carousel__dots" id="carousel-dots" data-od-id="carousel-dots">
+      <button class="carousel__dot" data-index="0" aria-label="项目 1"></button>
+      <button class="carousel__dot is-active" data-index="0" aria-label="项目 1"></button>
+      <button class="carousel__dot" data-index="2" aria-label="项目 3"></button>
+      <button class="carousel__dot" data-index="3" aria-label="项目 4"></button>
+    </div>
+  </div>
+
+  <!-- ========== FAN SIDEBAR ========== -->
+  <div class="fan-overlay" id="fan-overlay" data-od-id="fan-overlay">
+    <div class="fan-overlay__backdrop" id="fan-backdrop"></div>
+    <div class="fan-panel" id="fan-panel" data-od-id="fan-panel">
+
+      <!-- Head (sticky) -->
+      <div class="fan-panel__head fan-rib">
+        <span class="fan-panel__badge">DETAIL &nbsp;·&nbsp; 项目详情</span>
+        <button class="fan-panel__close" id="fan-close" data-od-id="fan-close" aria-label="关闭详情">✕</button>
+      </div>
+
+      <!-- Content filled by JS -->
+      <div id="fan-body" data-od-id="fan-body"></div>
+
+    </div>
+  </div>
+
+  <!-- Detail image zoom -->
+  <div class="zoom-overlay" id="zoom-overlay" data-od-id="zoom-overlay" role="dialog" aria-modal="true" aria-label="图片放大预览">
+    <button class="zoom-overlay__backdrop" id="zoom-backdrop" data-od-id="zoom-backdrop" aria-label="关闭放大预览"></button>
+    <div class="zoom-overlay__stage" data-od-id="zoom-stage">
+      <button class="zoom-overlay__nav zoom-overlay__nav--prev" id="zoom-prev" data-od-id="zoom-prev" aria-label="上一张">‹</button>
+      <figure class="zoom-overlay__frame" data-od-id="zoom-frame">
+        <img id="zoom-image" src="" alt="">
+        <figcaption class="zoom-overlay__caption" id="zoom-caption"></figcaption>
+        <button class="zoom-overlay__close" id="zoom-close" data-od-id="zoom-close" aria-label="关闭放大预览">✕</button>
+      </figure>
+      <button class="zoom-overlay__nav zoom-overlay__nav--next" id="zoom-next" data-od-id="zoom-next" aria-label="下一张">›</button>
+    </div>
+  </div>
+
+  <!-- ========== Bottom dock ========== -->
+  <div class="projects__bottom" data-od-id="projects-bottom">
+    <div class="status-bar" role="list" aria-label="系统状态">
+      <div class="status" role="listitem"><span class="dot dot--blue"></span>INTERNSHIP&nbsp;FIELD&nbsp;LOG</div>
+      <div class="status" role="listitem"><span class="dot dot--green"></span>CAROUSEL&nbsp;ACTIVE</div>
+      <div class="status" role="listitem"><span class="dot dot--blue"></span>AI&nbsp;LINK</div>
+      <div class="status" role="listitem"><span class="dot dot--orange"></span>UPDATED&nbsp;2026</div>
+      <span class="cta-status--inline" role="listitem" data-od-id="projects-cta-status">ANGEL&nbsp;AI&nbsp;·&nbsp;ONLINE</span>
+    </div>
+    <div class="footer-meta">2026 · ANGELIC PROTOCOL · v2026.01</div>
+  </div>
+
+  <div class="side-rail" aria-hidden="true"></div>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  // ---- Project data - imported ----
+  var PROJECTS = [
+    {
+      id: 'ai-studio',
+      title: 'AI Studio 模型策略测试',
+      subtitle: 'AI 片场 1.0 灰度版 · 小说推文 / 动态漫 / AI 漫剧',
+      heroImg: '../assets/projects/aipc-1-cover.jpg',
+      ambient: 'linear-gradient(135deg, rgba(59,130,246,0.4), rgba(139,92,246,0.2))',
+      tags: ['策略产品', 'A/B 实验', '视频生成', '角色资产'],
+      role: '策略产品 · 全程参与',
+      scope: '小说推文 / 动态漫 / AI 漫剧 · 15s~1min',
+      metrics: '流畅度 +12% · badcase -15%',
+      status: '1.0 灰度测试中 · 2.0 待新模型上线',
+      desc: '面向小说推文、动态漫、AI 漫剧等剧情向短片场景，承接目标场景用户的创作需求，通过优化 Prompt 引导、升级底层模型以及调整镜头切换节奏，提升视频叙事逻辑的连贯性，为 C 端提供有消费价值的 AI 创作内容。',
+      highlights: [
+        '提出「通过优化 Prompt 引导、升级底层模型以及调整镜头切换节奏，可以显著提升视频叙事逻辑的连贯性」假设',
+        '设计 A/B 实验，验证特定 Prompt + 模型 B + 旁白模式 + 5 秒分镜的组合策略',
+        '最优组合策略让短片流畅度 +12%、badcase 率 -15%，并推动最优方案全量上线',
+      ],
+      tech: 'Z-Image · Qwen-Image · Midjourney · Prompt 策略 · 分镜节奏',
+    },
+    {
+      id: 'mj-erase-bench',
+      title: 'MJ-Erase-Bench',
+      subtitle: '视频消除工具 · 模型评测 / 数据 / GT 标准制定',
+      heroImg: '../assets/projects/mj-erase-bench.jpg',
+      ambient: 'linear-gradient(135deg, rgba(34,197,94,0.3), rgba(59,130,246,0.3))',
+      tags: ['模型评测', 'Bench', 'GT 标准', '视频消除'],
+      role: '模型评测 · 数据 · GT 标准制定',
+      scope: '27 个细分场景 · 10+ 主流开源 / 闭源模型',
+      metrics: 'Bench 数据集 · 评分体系 · 对比报告',
+      status: '用于反推下一版本算法迭代方向',
+      desc: '面向真实业务的 AI 视频消除评测集，覆盖移除画面中的物体、字幕、水印、路人等真实创作场景。通过 27 类细分场景与 10+ 主流模型对比，建立统一可量化的评测标准。',
+      highlights: [
+        '拆解 27 个细分场景，覆盖真实创作中最常见的视频消除需求',
+        '对比 10+ 主流开源 / 闭源模型，形成统一可量化评分体系',
+        '产出 Bench 数据集、评分体系与对比报告，用逐项分数反推算法下一个版本需要补的能力',
+      ],
+      tech: '视频消除 Bench · GT 标注 · 场景拆解 · 对比报告',
+    },
+    {
+      id: 'creator-platform',
+      title: 'AI 创作者平台设计',
+      subtitle: 'Prompt 模板 · LoRA 创作 · 任务全流程线上化',
+      heroImg: '../assets/projects/千问创作者服务平台.png',
+      ambient: 'linear-gradient(135deg, rgba(239,68,68,0.3), rgba(249,115,22,0.25))',
+      tags: ['创作者平台', 'Prompt', 'LoRA', 'B端'],
+      role: '产品设计',
+      scope: 'Prompt 模板 · LoRA 创作 · 运营与创作者后台',
+      metrics: '运营人力成本 -60% · 任务全流程线上化',
+      status: 'PGC 内容全链路数字化管控',
+      desc: '针对 Prompt 模板内容生产流程低效、LoRA 创作返工率高的痛点，拆解运营与 Prompt / LoRA 创作者的核心诉求，分三阶段规划账号打通、任务发布、在线训练、复杂工作流支持等功能。',
+      highlights: [
+        '拆解运营、Prompt 与 LoRA 创作者核心诉求，定位生产流程低效与返工率高的问题',
+        '分三阶段规划账号打通、任务发布、在线训练与复杂工作流支持',
+        '推动任务全流程线上化，降低运营人力成本 60%，实现 PGC 内容全链路数字化管控',
+      ],
+      tech: 'Prompt 模板 · LoRA 训练 · 任务流 · 创作者后台',
+    },
+    {
+      id: 'creation-camera',
+      title: '创作相机 Web 端',
+      subtitle: 'AI 创作中台 0→1 · Web 端项目负责人',
+      heroImg: '../assets/projects/vivo-AI创作web端.png',
+      detailImg: '../assets/projects/vivo-AI相机web端2.png',
+      ambient: 'linear-gradient(135deg, rgba(168,85,247,0.35), rgba(59,130,246,0.25))',
+      tags: ['Web端', 'AI 创作中台', '画布 Agent', '0→1'],
+      role: 'Web 端项目负责人',
+      scope: 'AI 视效 · cos 角色特效 · AI 姿势推荐 · 画布 Agent · 光效',
+      metrics: '6 个功能 · 5 场漫展 · 反馈路径阻塞 -60%',
+      status: '「拍摄-AI增强-创作-导出」完整闭环',
+      desc: '主导 Web 端 AI 创作中台从 0 到 1 搭建，完成 AI 视效、专属 cos 角色特效、AI 姿势推荐、画布 Agent、光效等 6 个功能，并推动形成「拍摄-AI 增强-创作-导出」的完整闭环。',
+      highlights: [
+        '支撑 BilibiliWorld、ChinaJoy、萤火虫等 5 场漫展调研，完成全链路用户旅程梳理并解决 25 个反馈问题',
+        '全权负责 Web 端界面布局重构，持续优化上传-生成-资产管理-反馈全链路使用体验',
+        '产出 3 个版本迭代，画布 Agent 专区对种子用户开放，用户反馈路径阻塞问题减少 60%',
+      ],
+      tech: 'Web 端中台 · 画布 Agent · AI 视效 · 姿势推荐',
+    },
+  ];
+
+  // ---- State ----
+  var cards = Array.prototype.slice.call(document.querySelectorAll('.data-slate'));
+  var dots = Array.prototype.slice.call(document.querySelectorAll('.carousel__dot'));
+  var fanOverlay = document.getElementById('fan-overlay');
+  var fanBody = document.getElementById('fan-body');
+  var fanClose = document.getElementById('fan-close');
+  var fanBackdrop = document.getElementById('fan-backdrop');
+  var zoomOverlay = document.getElementById('zoom-overlay');
+  var zoomImage = document.getElementById('zoom-image');
+  var zoomCaption = document.getElementById('zoom-caption');
+  var zoomClose = document.getElementById('zoom-close');
+  var zoomBackdrop = document.getElementById('zoom-backdrop');
+  var zoomPrev = document.getElementById('zoom-prev');
+  var zoomNext = document.getElementById('zoom-next');
+  var zoomImages = [];
+  var zoomIndex = -1;
+  var currentIndex = 0; // starts at first card
+  var pendingOpenId = null;
+  var pendingAutoTimer = null;
+  var total = cards.length;
+
+  // ---- Layout cards (discrete positioning) ----
+  function layout(centerIdx) {
+    var centerScale = window.innerWidth <= 720 ? 1.24 : window.innerWidth <= 1100 ? 1.32 : 1.36;
+    cards.forEach(function (card, i) {
+      var diff = i - centerIdx;
+      var abs = Math.abs(diff);
+      var x, scale, opacity, blur, z;
+
+      if (abs === 0) {
+        x = 0; scale = centerScale; opacity = 1; blur = 0; z = 5;
+      } else if (abs === 1) {
+        var sign = diff > 0 ? 1 : -1;
+        x = sign * 360; scale = 0.84; opacity = 0.5; blur = 1; z = 4;
+      } else if (abs === 2) {
+        var sign2 = diff > 0 ? 1 : -1;
+        x = sign2 * 720; scale = 0.68; opacity = 0.25; blur = 2; z = 3;
+      } else {
+        var sign3 = diff > 0 ? 1 : -1;
+        x = sign3 * 1100; scale = 0.52; opacity = 0; blur = 3; z = 2;
+      }
+
+      card.style.transform = 'translateX(' + x + 'px) scale(' + scale + ')';
+      card.style.opacity = opacity;
+      card.style.filter = 'blur(' + blur + 'px)';
+      card.style.zIndex = z;
+      card.classList.toggle('is-center', abs === 0);
+    });
+
+    dots.forEach(function (dot, i) {
+      dot.classList.toggle('is-active', i === centerIdx);
+    });
+
+    currentIndex = centerIdx;
+  }
+
+  // ---- Go to ----
+  function clearPendingAutoOpen() {
+    if (pendingAutoTimer) {
+      clearTimeout(pendingAutoTimer);
+      pendingAutoTimer = null;
+    }
+  }
+
+  /* Boundary-aware navigation: at the first/last card the call
+     returns false so the caller (wheel handler) can let the scroll
+     event propagate to the host page instead of looping back. */
+  function goTo(idx) {
+    clearPendingAutoOpen();
+    if (idx < 0 || idx >= total) return false;
+    layout(idx);
+    return true;
+  }
+
+  // ---- Open fan ----
+  function openFan(projectId) {
+    var proj = PROJECTS.find(function (p) { return p.id === projectId; });
+    if (!proj) return;
+    clearPendingAutoOpen();
+    pendingOpenId = null;
+
+    var tagsHTML = proj.tags.map(function (t) {
+      return '<span class="fan-rib__tag">' + t + '</span>';
+    }).join('');
+
+    var highlightsHTML = proj.highlights.map(function (h) {
+      return '<li style="font-family:var(--font-body);font-size:13px;line-height:1.7;color:rgba(232,238,247,0.82);margin-bottom:6px;padding-left:12px;list-style:none;position:relative;">' +
+        '<span style="position:absolute;left:0;top:7px;width:4px;height:4px;border-radius:50%;background:var(--accent-2);box-shadow:0 0 4px var(--accent-2);"></span>' +
+        h + '</li>';
+    }).join('');
+
+    var zoomHint = '<em class="fan-rib__zoom-hint">点击放大</em>';
+    var mediaHTML = proj.detailImg
+      ? '<div class="fan-rib fan-rib--media-scroll" data-od-id="project-media-scroll">' +
+          '<div class="fan-rib--media-scroll__viewport" data-od-id="project-media-viewport">' +
+            '<figure class="fan-rib__media-cell" data-od-id="project-media-detail">' +
+              '<img src="' + proj.detailImg + '" alt="' + proj.title + ' · 第二屏" data-zoom="1" data-zoom-caption="' + proj.title + ' · 第二屏" role="button" tabindex="0" aria-label="放大查看：' + proj.title + ' · 第二屏">' +
+              '<figcaption class="fan-rib__media-cap">' + proj.title + ' · 第二屏' + zoomHint + '</figcaption>' +
+            '</figure>' +
+            '<figure class="fan-rib__media-cell" data-od-id="project-media-main">' +
+              '<img src="' + proj.heroImg + '" alt="' + proj.title + ' · 主界面" data-zoom="1" data-zoom-caption="' + proj.title + ' · 主界面" role="button" tabindex="0" aria-label="放大查看：' + proj.title + ' · 主界面">' +
+              '<figcaption class="fan-rib__media-cap">' + proj.title + ' · 主界面' + zoomHint + '</figcaption>' +
+            '</figure>' +
+          '</div>' +
+          '<button class="fan-rib__media-arrow fan-rib__media-arrow--prev" type="button" data-media-prev="1" data-od-id="media-prev" aria-label="上一张"><span aria-hidden="true">‹</span></button>' +
+          '<button class="fan-rib__media-arrow fan-rib__media-arrow--next" type="button" data-media-next="1" data-od-id="media-next" aria-label="下一张"><span aria-hidden="true">›</span></button>' +
+        '</div>'
+      : '<div class="fan-rib fan-rib--hero" data-od-id="project-media-single">' +
+          '<img src="' + proj.heroImg + '" alt="' + proj.title + '" data-zoom="1" data-zoom-caption="' + proj.title + '" role="button" tabindex="0" aria-label="放大查看：' + proj.title + '">' +
+          '<div class="fan-rib__shade"></div>' +
+        '</div>';
+
+    fanBody.innerHTML = mediaHTML +
+      '<div class="fan-rib fan-rib--content">' +
+        '<div class="fan-rib__section">' +
+          '<div class="fan-rib__title">' + proj.title + '</div>' +
+          '<div class="fan-rib__subtitle">' + proj.subtitle + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="fan-rib fan-rib--content">' +
+        '<div class="fan-rib__section">' +
+          '<div class="fan-rib__label">项目简介</div>' +
+          '<div class="fan-rib__desc">' + proj.desc + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="fan-rib fan-rib--content">' +
+        '<div class="fan-rib__section">' +
+          '<div class="fan-rib__label">核心成果</div>' +
+          '<ul style="margin:0;padding:0;">' + highlightsHTML + '</ul>' +
+        '</div>' +
+      '</div>' +
+      '<div class="fan-rib fan-rib--content">' +
+        '<div class="fan-rib__section">' +
+          '<div class="fan-rib__meta-grid">' +
+            '<div class="fan-rib__meta-item"><div class="fan-rib__meta-key">角色</div><div class="fan-rib__meta-val">' + proj.role + '</div></div>' +
+            '<div class="fan-rib__meta-item"><div class="fan-rib__meta-key">目标场景</div><div class="fan-rib__meta-val">' + proj.scope + '</div></div>' +
+            '<div class="fan-rib__meta-item"><div class="fan-rib__meta-key">量化收益</div><div class="fan-rib__meta-val">' + proj.metrics + '</div></div>' +
+            '<div class="fan-rib__meta-item"><div class="fan-rib__meta-key">当前状态</div><div class="fan-rib__meta-val">' + proj.status + '</div></div>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="fan-rib fan-rib--content">' +
+        '<div class="fan-rib__section" style="border-bottom:0;">' +
+          '<div class="fan-rib__label">技术标签</div>' +
+          '<div class="fan-rib__tags">' + tagsHTML + '</div>' +
+        '</div>' +
+      '</div>';
+
+    Array.prototype.slice.call(fanBody.querySelectorAll('.fan-rib--media-scroll')).forEach(function (rail) {
+      var viewport = rail.querySelector('.fan-rib--media-scroll__viewport');
+      if (!viewport) return;
+      viewport.addEventListener('scroll', function () {
+        updateMediaArrows(rail);
+      }, { passive: true });
+      updateMediaArrows(rail);
+      setTimeout(function () {
+        updateMediaArrows(rail);
+      }, 120);
+      setTimeout(function () {
+        updateMediaArrows(rail);
+      }, 800);
+    });
+
+    fanOverlay.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeFan() {
+    clearPendingAutoOpen();
+    pendingOpenId = null;
+    fanOverlay.classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+
+  function openZoom(img) {
+    if (!img || !img.src) return;
+    zoomImages = Array.prototype.slice.call(fanBody.querySelectorAll('img[data-zoom]'));
+    zoomIndex = zoomImages.indexOf(img);
+    if (zoomIndex < 0) zoomIndex = 0;
+    renderZoom();
+    zoomOverlay.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+    zoomClose.focus();
+  }
+
+  function closeZoom() {
+    zoomOverlay.classList.remove('is-open');
+    zoomImages = [];
+    zoomIndex = -1;
+    if (!fanOverlay.classList.contains('is-open')) {
+      document.body.style.overflow = '';
+    }
+  }
+
+  function updateZoomNav() {
+    var count = zoomImages.length;
+    zoomPrev.disabled = count < 2 || zoomIndex <= 0;
+    zoomNext.disabled = count < 2 || zoomIndex >= count - 1;
+  }
+
+  function renderZoom() {
+    var img = zoomImages[zoomIndex];
+    if (!img) return;
+    zoomImage.src = img.currentSrc || img.src;
+    zoomImage.alt = img.alt || '';
+    zoomCaption.textContent = img.getAttribute('data-zoom-caption') || img.alt || '';
+    updateZoomNav();
+  }
+
+  function stepZoom(dir) {
+    if (zoomImages.length < 2) return;
+    var next = zoomIndex + dir;
+    if (next < 0 || next >= zoomImages.length) return;
+    zoomIndex = next;
+    renderZoom();
+
+    var activeImg = zoomImages[zoomIndex];
+    var cell = activeImg.closest && activeImg.closest('.fan-rib__media-cell');
+    var viewport = cell && cell.closest && cell.closest('.fan-rib--media-scroll__viewport');
+    var rail = viewport && viewport.closest && viewport.closest('.fan-rib--media-scroll');
+    if (!viewport) return;
+
+    var cells = Array.prototype.slice.call(viewport.children);
+    var cellIndex = cells.indexOf(cell);
+    if (cellIndex < 0) return;
+    viewport.scrollTo({ left: cellIndex * viewport.clientWidth, behavior: 'smooth' });
+    if (rail) {
+      setTimeout(function () {
+        updateMediaArrows(rail);
+      }, 360);
+    }
+  }
+
+  function updateMediaArrows(rail) {
+    var viewport = rail.querySelector('.fan-rib--media-scroll__viewport');
+    if (!viewport) return;
+    var prev = rail.querySelector('[data-media-prev]');
+    var next = rail.querySelector('[data-media-next]');
+    var cells = Array.prototype.slice.call(viewport.children);
+    var activeIndex = Math.round(viewport.scrollLeft / (viewport.clientWidth || 1));
+    activeIndex = Math.max(0, Math.min(cells.length - 1, activeIndex));
+    cells.forEach(function (cell, i) {
+      cell.classList.toggle('is-active', i === activeIndex);
+    });
+    var atStart = viewport.scrollLeft <= 0;
+    var atEnd = viewport.scrollLeft + viewport.clientWidth >= viewport.scrollWidth - 1;
+    if (prev) prev.disabled = atStart;
+    if (next) next.disabled = atEnd;
+  }
+
+  function scrollMedia(rail, direction) {
+    var viewport = rail.querySelector('.fan-rib--media-scroll__viewport');
+    if (!viewport) return;
+    var amount = viewport.clientWidth;
+    viewport.scrollBy({ left: direction * amount, behavior: 'smooth' });
+    setTimeout(function () {
+      updateMediaArrows(rail);
+    }, 360);
+  }
+
+  // ---- Event binding ----
+  dots.forEach(function (dot) {
+    dot.addEventListener('click', function () {
+      goTo(parseInt(dot.getAttribute('data-index'), 10));
+    });
+  });
+
+  // Card click → fan
+  cards.forEach(function (card) {
+    card.addEventListener('click', function () {
+      var idx = parseInt(card.getAttribute('data-index'), 10);
+      var proj = PROJECTS[idx];
+      if (!proj) return;
+      if (idx !== currentIndex) {
+        pendingOpenId = proj.id;
+        goTo(idx);
+        pendingAutoTimer = setTimeout(function () {
+          pendingAutoTimer = null;
+          if (pendingOpenId === proj.id && currentIndex === idx) {
+            pendingOpenId = null;
+            openFan(proj.id);
+          }
+        }, 900);
+        return;
+      }
+      openFan(proj.id);
+    });
+  });
+
+  fanClose.addEventListener('click', closeFan);
+  fanBackdrop.addEventListener('click', closeFan);
+  fanBody.addEventListener('click', function (e) {
+    var arrow = e.target.closest && e.target.closest('[data-media-prev], [data-media-next]');
+    if (arrow) {
+      e.preventDefault();
+      var rail = arrow.closest('.fan-rib--media-scroll');
+      if (rail) scrollMedia(rail, arrow.hasAttribute('data-media-prev') ? -1 : 1);
+      return;
+    }
+    var img = e.target.closest && e.target.closest('img[data-zoom]');
+    if (img) {
+      e.preventDefault();
+      openZoom(img);
+    }
+  });
+  fanBody.addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    var img = e.target.closest && e.target.closest('img[data-zoom]');
+    if (img) {
+      e.preventDefault();
+      openZoom(img);
+    }
+  });
+  zoomClose.addEventListener('click', closeZoom);
+  zoomBackdrop.addEventListener('click', closeZoom);
+  zoomPrev.addEventListener('click', function () {
+    stepZoom(-1);
+  });
+  zoomNext.addEventListener('click', function () {
+    stepZoom(1);
+  });
+
+  // Keyboard: Escape closes fan
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && zoomOverlay.classList.contains('is-open')) {
+      closeZoom();
+      return;
+    }
+    if (e.key === 'Escape' && fanOverlay.classList.contains('is-open')) {
+      closeFan();
+    }
+  });
+
+  // Keyboard: arrow keys switch zoomed images
+  document.addEventListener('keydown', function (e) {
+    if (!zoomOverlay.classList.contains('is-open')) return;
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      stepZoom(-1);
+    }
+    if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      stepZoom(1);
+    }
+  });
+
+  // ---- Keyboard: arrow keys for carousel ----
+  document.addEventListener('keydown', function (e) {
+    if (zoomOverlay.classList.contains('is-open') || fanOverlay.classList.contains('is-open')) return;
+    if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
+    if (e.key === 'ArrowLeft') { goTo(currentIndex - 1); }
+    if (e.key === 'ArrowRight') { goTo(currentIndex + 1); }
+  });
+
+  // ---- Mouse wheel: scroll over carousel to navigate ----
+  var wheelWrap = document.querySelector('.carousel-wrap');
+  var wheelBusy = false;
+  wheelWrap.addEventListener('wheel', function (e) {
+    // Don't interfere when the fan overlay is open
+    if (fanOverlay.classList.contains('is-open')) return;
+    // Throttle: ignore rapid scroll events
+    if (wheelBusy) { e.preventDefault(); return; }
+    // Ignore scrolls over dots
+    var t = e.target;
+    var isInteractive = false;
+    while (t && t !== wheelWrap) {
+      if (t.classList && t.classList.contains('carousel__dot')) { isInteractive = true; break; }
+      t = t.parentElement;
+    }
+    if (isInteractive) return;
+    // Scroll direction: down → next, up → prev
+    if (Math.abs(e.deltaY) < 4) return; // ignore tiny scroll jitter
+
+    var dir = e.deltaY > 0 ? 1 : -1;
+    var moved = goTo(currentIndex + dir);
+
+    if (!moved) {
+      // At the boundary — let the wheel event propagate so the
+      // host page can scroll to the next/previous section.
+      return;
+    }
+    e.preventDefault();
+    wheelBusy = true;
+    // Cooldown — keeps continuous wheel input responsive without skipping cards
+    setTimeout(function () { wheelBusy = false; }, 620);
+  }, { passive: false });
+
+  // ---- Init ----
+  layout(0);
+  window.addEventListener('resize', function () {
+    layout(currentIndex);
+  });
+
+  // Footer date
+  var meta = document.querySelector('.footer-meta');
+  if (meta) {
+    var d = new Date(), pad = function (n) { return n < 10 ? '0' + n : '' + n; };
+    meta.textContent = '2026 · ANGELIC PROTOCOL · ' + d.getFullYear() + '.' + pad(d.getMonth() + 1) + '.' + pad(d.getDate());
+  }
+
+})();
+</script>
+
+
+
+
+
+
+</body></html>
