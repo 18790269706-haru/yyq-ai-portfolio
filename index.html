@@ -707,31 +707,73 @@
     var top = target.getBoundingClientRect().top + window.scrollY - navH;
     window.scrollTo({ top: top, behavior: "smooth" });
   }
+  /* Wheel handler with "coalesce same-direction bursts" logic.
+     A naive setTimeout(700ms) gate dropped single wheels whenever
+     a previous wheel landed within 700ms — trackpads fire many
+     small wheels per second, so the gate either doubled the
+     response time or skipped events entirely. Instead we collect
+     wheels for ~140ms and only advance ONCE per burst, regardless
+     of how many wheel events fired in that window. After firing
+     we wait until the browser has actually scrolled to the new
+     target (or ~750ms) before accepting the next burst. */
+  var wheelBurst = null;
   function hostWheel(e) {
-    if (wheelBusy) return;
     if (Math.abs(e.deltaY) < 8) return;
-    wheelBusy = true;
     var dir = e.deltaY > 0 ? 1 : -1;
+    if (wheelBurst) {
+      if (wheelBurst.dir === dir) {
+        wheelBurst.dir = dir;   // same direction — keep, refresh timer
+        clearTimeout(wheelBurst.timer);
+      } else {
+        // opposite direction mid-burst → fire immediately
+        clearTimeout(wheelBurst.timer);
+        fireWheel(dir);
+        return;
+      }
+    } else {
+      wheelBurst = { dir: dir, timer: null };
+    }
+    wheelBurst.timer = setTimeout(function () {
+      fireWheel(wheelBurst.dir);
+    }, 140);
+  }
+  function fireWheel(dir) {
+    wheelBurst = null;
+    if (wheelBusy) return;
     var target = currentSection + dir;
     if (target < 0) target = 0;
     if (target >= frames.length) target = frames.length - 1;
-    if (target !== currentSection) {
-      // Directly scroll to the target — the browser's native
-      // smooth scroll is the "丝滑连接" we want, no extra animation.
-      goToSection(target);
-    }
-    setTimeout(function () { wheelBusy = false; }, 700);
+    if (target === currentSection) return;
+    goToSection(target);
+    wheelBusy = true;
+    setTimeout(function () { wheelBusy = false; }, 750);
   }
 
-  // Listen for forwarded wheel events from any iframe.
+  // Listen for forwarded wheel events from any iframe. If the
+  // host is already animating a smooth scroll (scrollY is moving
+  // due to a click on the nav), ignore forwarded messages so we
+  // don't double-fire the wheel handler.
   window.addEventListener("message", function (e) {
     if (e.data && e.data.type === "host-wheel") {
       hostWheel({ deltaY: e.data.deltaY });
     }
   });
 
-  // Also catch wheels over the host chrome (nav, body margins).
-  window.addEventListener("wheel", hostWheel, { passive: true });
+  // Host-chrome wheel handler. We only react to wheels over
+  // elements that AREN'T iframes — the iframe forwarder already
+  // covers those. If the user wheel-targets the topnav / page
+  // chrome (small surface), this handler fires and triggers the
+  // chapter scroll.
+  window.addEventListener("wheel", function (e) {
+    var t = e.target;
+    var overIframe = false;
+    while (t && t !== document.body) {
+      if (t.tagName === "IFRAME") { overIframe = true; break; }
+      t = t.parentNode;
+    }
+    if (overIframe) return;
+    hostWheel({ deltaY: e.deltaY });
+  }, { passive: true });
 
   allNav.forEach(function (link) {
     link.addEventListener("click", function (e) {
