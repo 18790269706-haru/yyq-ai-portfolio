@@ -6,8 +6,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+SC:wght@400;500;700;900&amp;display=swap" rel="stylesheet">
-  <script defer src="assets/vendor/gsap.min.js"
-          onerror="this.onerror=null;this.removeAttribute('onerror');window.__gsapLoadFailed=true;"></script>
   <style>
     /* ============================================================
        Reset & base
@@ -237,9 +235,6 @@
     .protocol-frame[data-index="0"] {
       opacity: 1;
       transform: translateY(0);
-    }
-    .protocol-frame.is-pix-out {
-      pointer-events: none;
     }
     @media (prefers-reduced-motion: reduce) {
       .protocol-frame {
@@ -532,17 +527,10 @@
   ];
 
   var currentSection = 0;
-  var transitioning = false;
   function setSection(idx) {
     if (idx === currentSection) return;
     var prev = currentSection;
     currentSection = idx;
-
-    // During a GSAP chapter transition, suppress sweep re-triggers
-    // caused by IntersectionObserver / scroll-handler activity. The
-    // jumpTo() path will issue a final setSection() once the
-    // transition completes, restoring the proper active state.
-    if (transitioning) return;
 
     // 1) parallax tint
     if (parallax) {
@@ -671,89 +659,34 @@
   });
 
   /* ------------------------------------------------------------
-     Chapter transition — pixelate dissolve
+     Chapter transition — smooth scroll (no animation)
      ------------------------------------------------------------
-     The current section's iframe is blurred + desaturated +
-     scaled-out (pixelating); once it is gone the target section
-     is scrolled into view and re-pixellated back in.
+     The host page is just 8 iframes stacked vertically. To move
+     from one to the next we simply scroll the host window to
+     the target iframe's offset. The browser handles the rest with
+     its native smooth-scroll — this is the "丝滑连接" experience.
      ------------------------------------------------------------ */
-  var gsapReady = (typeof window.gsap !== "undefined");
-  // Poll for GSAP arrival up to ~3s — it loads async.
-  if (!gsapReady) {
-    var gsapWait = setInterval(function () {
-      if (typeof window.gsap !== "undefined") {
-        gsapReady = true;
-        clearInterval(gsapWait);
-      }
-    }, 60);
-    setTimeout(function () { clearInterval(gsapWait); }, 3000);
-  }
-  var PIX_OUT = { filter: "blur(18px) saturate(0.4)", opacity: 0, scale: 1.04, duration: 0.6, ease: "power3.in" };
-  var PIX_IN  = { filter: "blur(0px) saturate(1)",    opacity: 1, scale: 1,    duration: 0.7, ease: "power3.out", clearProps: "filter,opacity,scale" };
-
-  function pixelateOut(frame) {
-    if (!gsapReady) return Promise.resolve();
-    if (frame.classList.contains("is-pix-out")) return Promise.resolve();
-    frame.classList.add("is-pix-out");
-    return new Promise(function (resolve) {
-      window.gsap.to(frame, Object.assign({}, PIX_OUT, { onComplete: resolve }));
-    });
-  }
-  function pixelateIn(frame) {
-    if (!gsapReady) return Promise.resolve();
-    return new Promise(function (resolve) {
-      window.gsap.fromTo(frame,
-        { filter: "blur(18px) saturate(0.4)", opacity: 0, scale: 1.04 },
-        Object.assign({}, PIX_IN, { onComplete: resolve })
-      );
-    });
-  }
-
-  function jumpTo(idx) {
-    if (transitioning) return;
+  function scrollToSection(idx) {
     var target = document.getElementById("section-" + idx);
     if (!target) return;
+    var navH = (idx === 0) ? 0 : (document.querySelector(".topnav") || {}).offsetHeight || 0;
+    var top = target.getBoundingClientRect().top + window.scrollY - navH;
+    window.scrollTo({ top: top, behavior: "smooth" });
+  }
 
-    var currentFrame = null;
-    frames.forEach(function (f) {
-      var r = f.getBoundingClientRect();
-      if (r.top < window.innerHeight * 0.6 && r.bottom > 0) currentFrame = f;
+  function goToSection(idx) {
+    if (idx < 0 || idx >= frames.length) return;
+    scrollToSection(idx);
+    target.classList.add("is-revealed");
+    links.forEach(function (l, i) { l.classList.toggle("is-active", i === idx); });
+    ctas.forEach(function (c) {
+      var t = parseInt(c.getAttribute("data-target"), 10);
+      c.classList.toggle("is-active", t === idx);
     });
-
-    var navH = 0;
-    var isHero = (idx === 0);
-    if (!isHero) navH = document.querySelector(".topnav").offsetHeight;
-    var scrollTarget = window.scrollY + target.getBoundingClientRect().top - navH;
-
-    transitioning = true;
-
-    if (currentFrame && currentFrame !== target) {
-      pixelateOut(currentFrame).then(function () {
-        window.scrollTo({ top: scrollTarget, behavior: "auto" });
-        return pixelateIn(target);
-      }).then(finish);
-    } else {
-      window.scrollTo({ top: scrollTarget, behavior: "auto" });
-      pixelateIn(target).then(finish);
+    if (parallax) {
+      parallax.style.setProperty("--accent-tint", SECTION_TINTS[idx].accent);
     }
-
-    function finish() {
-      target.classList.add("is-revealed");
-      // Force-apply the active state for the target. Bypasses the
-      // transitioning guard so the nav highlight + tint land on the
-      // right section after the animation ends.
-      transitioning = false;
-      var prevGuard = null;
-      links.forEach(function (l, i) { l.classList.toggle("is-active", i === idx); });
-      ctas.forEach(function (c) {
-        var t = parseInt(c.getAttribute("data-target"), 10);
-        c.classList.toggle("is-active", t === idx);
-      });
-      if (parallax) {
-        parallax.style.setProperty("--accent-tint", SECTION_TINTS[idx].accent);
-      }
-      currentSection = idx;
-    }
+    currentSection = idx;
   }
 
   /* ------------------------------------------------------------
@@ -782,19 +715,12 @@
     var target = currentSection + dir;
     if (target < 0) target = 0;
     if (target >= frames.length) target = frames.length - 1;
-    if (target === currentSection) {
-      wheelBusy = false;
-      return;
+    if (target !== currentSection) {
+      // Directly scroll to the target — the browser's native
+      // smooth scroll is the "丝滑连接" we want, no extra animation.
+      goToSection(target);
     }
-    if (gsapReady) {
-      jumpTo(target);
-    } else {
-      // No GSAP — native scroll as a hard fallback so the wheel
-      // still advances chapters when the vendor script failed to
-      // load. This is the path the user was hitting before.
-      scrollToSection(target);
-    }
-    setTimeout(function () { wheelBusy = false; }, 850);
+    setTimeout(function () { wheelBusy = false; }, 700);
   }
 
   // Listen for forwarded wheel events from any iframe.
@@ -811,7 +737,7 @@
     link.addEventListener("click", function (e) {
       e.preventDefault();
       var idx = parseInt(link.getAttribute("data-target"), 10);
-      jumpTo(idx);
+      goToSection(idx);
     });
   });
 
